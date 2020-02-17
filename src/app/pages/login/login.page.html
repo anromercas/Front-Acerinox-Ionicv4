@@ -1,0 +1,163 @@
+<ion-content>
+  <ion-slides class="mainSlide" #slidePrincipal>
+    <ion-slide>
+      <form (ngSubmit)="login( fLogin )" #fLogin="ngForm">
+        <ion-grid class="grid-fixed">
+          <ion-row class="ion-align-items-center ion-justify-content-center">
+            <ion-col size="6">
+              <img src="../../../assets/acerinox.png" />
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-list>
+                <ion-item>
+                  <ion-label>Email</ion-label>
+                  <ion-input
+                    name="email"
+                    type="email"
+                    [(ngModel)]="loginUser.email"
+                    required
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label>Password</ion-label>
+                  <ion-input
+                    name="password"
+                    type="password"
+                    [(ngModel)]="loginUser.password"
+                    required
+                  ></ion-input>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-button
+                fill="outline"
+                expand="block"
+                shape="round"
+                type="submit"
+                color="tertiary"
+              >
+                Ingresar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-grid fixed>
+        <!-- <ion-row class="ion-align-items-center ion-justify-content-center">
+          <ion-col size="6">
+            <img src="../../../assets/acerinox.png" class="slide-image" />
+          </ion-col>
+        </ion-row> -->
+
+        <!-- avatarselector -->
+        <app-avatar-selector
+          (avatarSel)="registerUser.avatar = $event"
+        ></app-avatar-selector>
+
+        <form (ngSubmit)="registro( fRegistro )" #fRegistro="ngForm">
+          <ion-row>
+            <ion-col>
+              <ion-list>
+                <ion-item>
+                  <ion-label>Email</ion-label>
+                  <ion-input
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    [(ngModel)]="registerUser.email"
+                    required
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label>Nombre</ion-label>
+                  <ion-input
+                    name="nombre"
+                    type="text"
+                    inputmode="text"
+                    [(ngModel)]="registerUser.nombre"
+                    required
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label>Password</ion-label>
+                  <ion-input
+                    name="password"
+                    type="password"
+                    inputmode="text"
+                    pattern="(?=.*[-!#$%&/()?¡_])(?=.*[A-Z])(?=.*[a-z]).{8,}"
+                    [(ngModel)]="registerUser.password"
+                    required
+                  ></ion-input>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+          <p>
+            <ion-text color="danger">
+              *Al menos 8 caracteres, una letra mayúscula, una letra minúscula,
+              un número y un carácter especial.
+            </ion-text>
+          </p>
+
+          <ion-row>
+            <ion-col>
+              <ion-button
+                type="submit"
+                color="tertiary"
+                shape="round"
+                [disabled]="fRegistro.invalid"
+              >
+                Registrar
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </form>
+      </ion-grid>
+    </ion-slide>
+  </ion-slides>
+</ion-content>
+
+<ion-footer no-border>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button
+          shape="round"
+          expand="full"
+          size="small"
+          fill="outline"
+          color="tertiary"
+          (click)="mostrarRegistro()"
+        >
+          Login
+        </ion-button>
+      </ion-col>
+
+      <ion-col>
+        <ion-button
+          shape="round"
+          expand="full"
+          size="small"
+          fill="outline"
+          color="tertiary"
+          (click)="mostrarLogin()"
+        >
+          Registro
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

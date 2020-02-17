@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+        Gestión Resíduos
+    </ion-title>
+    <!-- <ion-back-button defaultHref="/" slot="start"></ion-back-button> -->
+
+    <ion-buttons slot="end">
+        <ion-button (click)="nueva_basura()" *ngIf="admin" shape="round" fill="outline" color="secondary">
+            + Contenedor
+        </ion-button>
+        
+       
+    </ion-buttons>
+  </ion-toolbar>
+
+
+  <ion-card>
+      <ion-card-content class="img-flamenco">
+          <img src="../../../assets/imgs/bahia.jpg" class="slide-image" />
+      </ion-card-content>
+  </ion-card>
+</ion-header>
+
+
+
+<ion-content class="ion-text-center">
+
+  <ion-card class="fondo-fabrica">
+      <ion-card-content class="contenido ion-no-padding">
+          <ion-grid>
+              <ion-list class="transparente">
+
+                <ion-item-divider mode="ios" sticky="true" color="primary">
+                    <h1>Acería</h1>
+                </ion-item-divider>
+
+                  <ion-item *ngFor="let zonaA of zonaAceria" (click)="irZona(zonaA)"  color="none" slot="start" class="ion-no-padding carne" detail>
+                      <ion-avatar slot="start">
+                          <img src="../../../assets/imgs/zone-icon.svg">
+                      </ion-avatar>
+                    <ion-label>
+                        <ion-text>
+                           <h3> {{ zonaA.nombre }} </h3> 
+                        </ion-text>
+                        <ion-text >
+                           <p class="ion-text-wrap"> <b> {{ zonaA.area }} </b>  </p> 
+                        </ion-text>
+                    </ion-label>    
+                  </ion-item>
+
+                  <ion-item-divider mode="ios" sticky="true" color="primary">
+                    <h1>Laminado Caliente</h1>
+                </ion-item-divider>
+
+                  <ion-item *ngFor="let zonaLC of zonaLC" (click)="irZona(zonaLC)"  color="none" slot="start" class="ion-no-padding verdecito" detail>
+                      <ion-avatar slot="start">
+                          <img src="../../../assets/imgs/zone-icon.svg">
+                      </ion-avatar>
+                    <ion-label>
+                        <ion-text>
+                           <h3> {{ zonaLC.nombre }} </h3> 
+                        </ion-text>
+                        <ion-text >
+                           <p class="ion-text-wrap"> <b> {{ zonaLC.area }} </b>  </p> 
+                        </ion-text>
+                    </ion-label>    
+                  </ion-item>
+
+                  <ion-item-divider mode="ios" sticky="true" color="primary">
+                    <h1>Laminado Frío</h1>
+                </ion-item-divider>
+
+                  <ion-item *ngFor="let zonaLF of zonaLF" (click)="irZona(zonaLF)"  color="none" slot="start" class="ion-no-padding azulina" detail>
+                      <ion-avatar slot="start">
+                          <img src="../../../assets/imgs/zone-icon.svg">
+                      </ion-avatar>
+                    <ion-label>
+                        <ion-text>
+                           <h3> {{ zonaLF.nombre }} </h3> 
+                        </ion-text>
+                        <ion-text >
+                           <p class="ion-text-wrap"> <b> {{ zonaLF.area }} </b>  </p> 
+                        </ion-text>
+                    </ion-label>    
+                  </ion-item>
+
+
+              </ion-list>
+
+          </ion-grid>
+
+      </ion-card-content>
+
+  </ion-card>
+
+</ion-content>
