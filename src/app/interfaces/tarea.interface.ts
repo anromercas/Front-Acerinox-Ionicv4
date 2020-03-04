@@ -1,4 +1,5 @@
 import { Usuario } from './usuario.interface';
+import { Formulario } from './formulario.interface';
 
 export interface Tarea {
     nombre: string;
@@ -13,5 +14,6 @@ export interface Tarea {
     codigo: string;
     fromNow: string;
     usuario: Usuario;
+    formulario: Formulario;
     tareaDeHoy: string;
 }

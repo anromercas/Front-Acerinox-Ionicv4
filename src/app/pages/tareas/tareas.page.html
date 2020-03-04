@@ -19,13 +19,17 @@
 
 <ion-content>
 
-  <ion-list>
+  <ion-list class="accordion-list">
 
-    <ion-item-divider color="danger">
-      <ion-label>
-        Tareas Expiradas
-      </ion-label>
-    </ion-item-divider>
+    <ion-list-header *ngFor="let item of secciones; let i = index" lines="none" >
+      <ion-item   (click)="toggleSection(i)" [ngClass]=" {'section-active': item.open, 'section': !item.open} ">
+        <ion-icon slot="start" name="arrow-forward" *ngIf="!item.open" ></ion-icon>
+        <ion-icon slot="start" name="arrow-down" *ngIf="item.open" ></ion-icon>
+        {{ item.name }}
+      </ion-item>
+      
+      
+    </ion-list-header>
 
 
     <ion-item-divider color="medium">
@@ -33,7 +37,7 @@
         Tareas Hoy
       </ion-label>
     </ion-item-divider>
-    <ion-item *ngFor="let tarea of tareas" [color]="tarea.tareaDeHoy" detail>
+    <ion-item *ngFor="let tarea of tareas2" [color]="tarea.tareaDeHoy" detail>
       <ion-thumbnail slot="start" class="ion-text-center">
         <ion-label color="tertiary" class="fondo-fecha">
           <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 

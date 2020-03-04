@@ -19,7 +19,7 @@ export class TareaService {
     const headers = new HttpHeaders({
       'token': this.usuarioService.token
     });
-    const url = URL + '/tarea/' + this.usuarioService.usuario._id;
+    const url = URL + '/tareas' /* + this.usuarioService.usuario._id */;
     return this.http.get( url, {headers});
   }
 }

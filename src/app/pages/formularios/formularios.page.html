@@ -1,0 +1,33 @@
+<ion-header translucent="true" mode="ios">
+  <ion-toolbar color="light">
+    <ion-title>Listado de Formularios</ion-title>
+
+    <ion-buttons slot="end" >
+      <ion-chip color="tertiary" (click)="ir('perfil')">
+        <ion-avatar class="avatar">
+          <img src="/assets/avatars/{{usuarioService.usuario.avatar}}">
+        </ion-avatar>
+        <ion-label> {{ usuarioService.usuario.nombre }} </ion-label>
+      </ion-chip>
+        <ion-button (click)="cerrar_sesion()" color="danger"> Salir
+          <ion-icon slot="end" name="exit" color="danger"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-button class="margin-top-30" expand="block" fill="outline" size="large" shape="round" (click)="ir('incidencia-puntual')" > Incidencia Puntual </ion-button>
+
+  <ion-item *ngFor="let form of forms" detail>
+    <ion-label>
+      <ion-text color="primary">
+        <h1 class="ion-text-wrap"> {{ form.nombre | titlecase }} </h1>
+      </ion-text>
+      <h2 class="ion-text-wrap"> {{ form.seccion | titlecase }} </h2>
+    </ion-label>
+  </ion-item>
+
+</ion-content>

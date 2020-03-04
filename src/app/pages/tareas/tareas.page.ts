@@ -4,6 +4,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { TareaService } from '../../services/tarea.service';
 import { Tarea } from 'src/app/interfaces/tarea.interface';
 import * as moment from 'moment';
+import { TAREAS } from '../../data/data.tareas';
 
 @Component({
   selector: 'app-tareas',
@@ -14,19 +15,42 @@ export class TareasPage implements OnInit {
 
   size = 'large';
   tareas: Tarea[] = [];
+  tareas2: any[] = [];
   tareasExpiradas: Tarea[] = [];
   tareaDeHoy = '';
+  secciones: any[] = [
+    {
+      name: 'Tareas Expiradas',
+      open: false
+    },
+    {
+      name: 'Tareas Pendientes',
+      open: false
+    },
+    {
+      name: 'Tareas Realizadas',
+      open: false
+    }
+  ];
 
   constructor(private router: Router,
               public usuarioService: UsuarioService,
               public tareaService: TareaService) { }
 
   ngOnInit() {
+
+    this.tareas2 = TAREAS;
+
+
     this.tareaService.obtenerTareasDeUsuario().subscribe( (resp: any) => {
       console.log(resp);
       this.tareas = resp.tareas;
       this.añadirFromNow();
     });
+  }
+
+  toggleSection(i) {
+    this.secciones[i].open = !this.secciones[i].open;
   }
 
   añadirFromNow() {

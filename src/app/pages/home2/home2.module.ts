@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'formularios',
-        loadChildren: ''
+        loadChildren: '../formularios/formularios.module#FormulariosPageModule'
       },
       {
         path: 'listado-zonas',
