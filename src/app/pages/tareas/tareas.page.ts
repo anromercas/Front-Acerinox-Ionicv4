@@ -145,7 +145,7 @@ export class TareasPage implements OnInit {
       tarea.fromNow = moment(fecha).fromNow();
       if ( tarea.estado === 'PENDIENTE APROBACION') {
         /* tarea.fromNow = 'Pendiente Aprovación'; */
-        tarea.fromNow = 'Pending Aprobal';
+        tarea.fromNow = 'Pending Aproal'
         tarea.colorFromNow = 'success';
       }
       if (tarea.fromNow.includes('hours') || tarea.fromNow.includes('minutes')) {
