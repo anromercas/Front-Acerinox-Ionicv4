@@ -1,4 +1,4 @@
-<ion-header translucent="true" mode="ios">
+<ion-header translucent="true">
   <ion-toolbar color="light">
 
     <ion-title>Lista Tareas</ion-title>
@@ -19,25 +19,93 @@
 
 <ion-content>
 
-  <ion-list class="accordion-list">
+  <ion-list  *ngFor="let item of secciones; index as i"   >
+    <ion-list-header (click)="expandItem(item)" [ngClass]="item.color">
+      <div> 
+        <ion-icon name="chevron-forward" *ngIf="!item.expanded" ></ion-icon>
+        <ion-icon name="chevron-down" *ngIf="item.expanded" ></ion-icon>
+        {{ item.name }} 
+      </div>
+    </ion-list-header>
 
-    <ion-list-header *ngFor="let item of secciones; let i = index" lines="none" >
-      <ion-item   (click)="toggleSection(i)" [ngClass]=" {'section-active': item.open, 'section': !item.open} ">
-        <ion-icon slot="start" name="arrow-forward" *ngIf="!item.open" ></ion-icon>
-        <ion-icon slot="start" name="arrow-down" *ngIf="item.open" ></ion-icon>
+    <div>
+      <app-expandable expandHeight="400px" [expanded]="item.expanded">
+
+        <ion-list >
+          <ion-item  *ngFor="let tarea of item.tareas"  (click)="irAtarea(tarea, item)" detail>
+            
+            <ion-thumbnail class="margin-left avatar-no-radius">
+              <img src="/assets/tareas/{{tarea.icono}}">
+            </ion-thumbnail>
+            
+            <!-- <ion-thumbnail slot="start" class="ion-text-center">
+              <ion-label color="tertiary" class="fondo-fecha">
+                <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 
+                <h2> {{ tarea.fechaFin | date: 'M' }} </h2> 
+                <h3> {{ tarea.fechaFin | date: 'y' }} </h3> 
+              </ion-label>
+              
+            </ion-thumbnail> -->
+            <ion-label>
+              <ion-text >
+                <h4 class="ion-text-wrap"> {{ tarea.nombre | titlecase }} </h4>
+              </ion-text>
+             <!--  <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
+              <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4> -->
+            </ion-label>
+            <ion-chip [color]="tarea.colorFromNow" [outline]="tarea.outline" slot="end" *ngIf="tarea.estado !== 'RALIZADA'" >
+              <ion-label> {{ tarea.fromNow }} </ion-label>
+            </ion-chip>
+          </ion-item> 
+        </ion-list>
+       
+      </app-expandable>
+    </div>
+  </ion-list>
+
+
+  <!-- <ion-list lines="none" >
+
+    <ion-item-divider *ngFor="let item of secciones; let i = index" >
+      <ion-item (click)="toggleSection(i)" [ngClass]=" {'section-active': item.open, 'section': !item.open} ">
+        <ion-icon slot="start" name="chevron-forward" *ngIf="!item.open" ></ion-icon>
+        <ion-icon slot="start" name="chevron-down" *ngIf="item.open" ></ion-icon>
         {{ item.name }}
       </ion-item>
       
+      <ion-list *ngIf="item.tareas && item.open">
+
+          <ion-item *ngFor="let tarea of item.tareas; let j = index" [color]="tarea.tareaDeHoy" detail>
+            <ion-thumbnail slot="start" class="ion-text-center">
+              <ion-label color="tertiary" class="fondo-fecha">
+                <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 
+                <h2> {{ tarea.fechaFin | date: 'M' }} </h2> 
+                <h3> {{ tarea.fechaFin | date: 'y' }} </h3> 
+              </ion-label>
+              
+            </ion-thumbnail>
+            <ion-label>
+              <ion-text color="primary">
+                <h1 class="ion-text-wrap"> {{ tarea.nombre | titlecase }} </h1>
+              </ion-text>
+              <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
+              <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4>
+            </ion-label>
+            <ion-chip color="tertiary" slot="end" >
+              <ion-label> {{ tarea.fromNow }} </ion-label>
+            </ion-chip>
+          </ion-item>
+          
+
+          
+        </ion-list>
       
-    </ion-list-header>
+    </ion-item-divider> 
+  </ion-list>-->
 
 
-    <ion-item-divider color="medium">
-      <ion-label>
-        Tareas Hoy
-      </ion-label>
-    </ion-item-divider>
-    <ion-item *ngFor="let tarea of tareas2" [color]="tarea.tareaDeHoy" detail>
+    
+    <!-- <ion-item *ngFor="let tarea of tareas2" [color]="tarea.tareaDeHoy" detail>
       <ion-thumbnail slot="start" class="ion-text-center">
         <ion-label color="tertiary" class="fondo-fecha">
           <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 
@@ -56,7 +124,7 @@
       <ion-chip color="tertiary" slot="end" >
         <ion-label> {{ tarea.fromNow }} </ion-label>
       </ion-chip>
-    </ion-item>
-  </ion-list>
+    </ion-item> 
+  </ion-list>-->
 
 </ion-content>

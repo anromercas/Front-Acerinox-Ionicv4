@@ -1,0 +1,19 @@
+img {
+    width: 50px;
+}
+
+.pick-avatar {
+    width: 50px;
+    opacity: 0.3;
+}
+
+.pick-avatar-seleccionado {
+    transition: opacity 0.5s linear !important;
+    opacity: 1 !important;
+}
+
+.remove-img {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}

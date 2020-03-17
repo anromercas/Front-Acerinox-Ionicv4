@@ -1,0 +1,67 @@
+export const TAREASREALIZ = [
+ {
+     id: 1,
+     nombre: 'OPS Almacén',
+     tipo: 'PUNTUAL',
+     fechaFin: '2020-03-12T15:30:56.438Z',
+     fechaRealizada: '2020-02-06T15:30:56.438Z',
+     estado: 'REALIZADA',
+     usuario: '5df0dce22199f426ac9e586d',
+     fromNow: '',
+     colorFromNow: '',
+     color: 'indicador-azul',
+     icono: 'ops.png'
+ },
+ {
+    id: 2,
+    nombre: 'Máquina AB3',
+    tipo: 'PUNTUAL',
+    fechaFin: '2020-01-20T15:30:56.438Z',
+    fechaRealizada: '2020-04-06T15:30:56.438Z',
+    estado: 'REALIZADA',
+    usuario: '5df0dce22199f426ac9e586d',
+    fromNow: '',
+    colorFromNow: '',
+    color: 'indicador-azul',
+    icono: 'maquina.png'
+},
+{
+    id: 3,
+    nombre: 'Revisión Fengui Almacén',
+    tipo: 'PUNTUAL',
+    fechaFin: '2020-02-15T15:30:56.438Z',
+    fechaRealizada: '2020-04-06T15:30:56.438Z',
+    estado: 'REALIZADA',
+    usuario: '5df0dce22199f426ac9e586d',
+    fromNow: '',
+    colorFromNow: '',
+    color: 'indicador-azul',
+    icono: 'maquinaria.png'
+},
+{
+    id: 4,
+    nombre: 'Máquina AB4',
+    tipo: 'PUNTUAL',
+    fechaFin: '2020-04-06T15:30:56.438Z',
+    fechaRealizada: '2020-01-06T15:30:56.438Z',
+    estado: 'REALIZADA',
+    usuario: '5df0dce22199f426ac9e586d',
+    fromNow: '',
+    colorFromNow: '',
+    color: 'indicador-azul',
+    icono: 'maquina.png'
+},
+{
+    id: 5,
+    nombre: 'Pasillo 20 Almacén MK50',
+    tipo: 'PUNTUAL',
+    fechaFin: '2020-01-01T15:30:56.438Z',
+    fechaRealizada: '2020-04-06T15:30:56.438Z',
+    estado: 'REALIZADA',
+    usuario: '5df0dce22199f426ac9e586d',
+    fromNow: '',
+    colorFromNow: '',
+    color: 'indicador-azul',
+    icono: 'almacen.png'
+},
+];

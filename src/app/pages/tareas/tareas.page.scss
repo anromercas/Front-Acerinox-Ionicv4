@@ -1,4 +1,58 @@
 .fondo-fecha {
-    background-color: #f4f5f8;
+    background-color: #becbf1;
     border-radius: 10px ;
+}
+
+.margin-left {
+    margin-right: 5px !important;
+}
+
+ion-card-content {
+    padding: 0px !important;
+}
+
+.separador-rojo{
+    background: #f4f5f8;
+    border-bottom: 3px solid #CD2539;
+}
+
+.indicador-rojo {
+    border-right: 5px solid #CD2539;
+    border-radius: 10px;
+}
+
+.separador-verde{
+    background: #f4f5f8;
+    border-bottom: 3px solid #0E991A;
+}
+
+.indicador-verde {
+    border-right: 5px solid #0E991A;
+    border-radius: 10px;
+}
+
+.separador-azul{
+    background: #f4f5f8;
+    border-bottom: 3px solid #049AD7;
+}
+
+.indicador-azul {
+    border-right: 5px solid #049AD7;
+    border-radius: 10px;
+}
+
+.indicador-gris {
+    background: #989aa2;
+    border-right: 5px solid #7F8C8D;
+    border-radius: 10px;
+}
+
+.avatar-no-radius {
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+.chip-pendiente {
+    background: #10dc60 !important;
+    color: #0E991A !important;
 }

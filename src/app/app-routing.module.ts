@@ -27,6 +27,7 @@ const routes: Routes = [
   { path: 'perfil', loadChildren: './pages/perfil/perfil.module#PerfilPageModule', canLoad: [ UsuarioGuard ] },
   { path: 'tareas', loadChildren: './pages/tareas/tareas.module#TareasPageModule', canLoad: [ UsuarioGuard ] },  { path: 'formularios', loadChildren: './pages/formularios/formularios.module#FormulariosPageModule' },
   { path: 'incidencia-puntual', loadChildren: './pages/incidencia-puntual/incidencia-puntual.module#IncidenciaPuntualPageModule' },
+  { path: 'checklist', loadChildren: './pages/checklist/checklist.module#ChecklistPageModule' },
 
 
 

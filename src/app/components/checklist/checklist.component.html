@@ -1,0 +1,61 @@
+<form [formGroup]="myForm">
+
+  <div formArrayName="sections" >
+
+    <ion-list lines="none" *ngFor="let seccion of secciones; index as secIndex">
+      <ion-list-header>
+        <h2> {{ seccion }} </h2>  
+        <ion-button (click)="addNewChek(secIndex, seccion)">
+          <ion-icon slot="start" name="add"></ion-icon>
+        </ion-button>
+        <ion-checkbox color="success"></ion-checkbox>
+      </ion-list-header>
+
+
+      <div [formGroupName]="secIndex">
+
+        <div [formArrayName]="seccion">
+
+          <ion-item *ngFor="let chek of sectionCheks(secIndex, seccion).controls; index as chekIndex">
+            <ion-grid fixed>
+              <ion-row [formGroupName]="chekIndex">
+                <ion-col size="8">
+                  <ion-input required type="text" formControlName="chek" placeHolder="Texto..."></ion-input>
+                </ion-col>
+                <ion-col size="3">
+
+                  <ion-slides [options]="avatarSlide">
+                    <ion-slide *ngFor="let avatar of avatars">
+                      <ion-img
+                        class="pick-avatar"
+                        src="/assets/avatars/{{ avatar.img }}"
+                        [ngClass]="{ 'pick-avatar-seleccionado': avatar.seleccionado }"
+                        (click)="seleccionarAvatar(avatar)"
+                      ></ion-img>
+                    <ion-icon class="remove-img" (click)="removeImg(avatar)" name="close-circle"></ion-icon>
+                      
+
+                    </ion-slide>
+                  </ion-slides>
+                </ion-col>
+                <ion-col size="1">
+                <!--   <ion-icon  name="close-circle"></ion-icon> -->
+                <ion-icon color="primary" name="camera"></ion-icon>
+                <ion-icon color="danger" (click)="removeChek(secIndex, chekIndex, seccion)" name="trash"></ion-icon>
+
+              </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+
+        </div>
+
+      </div>
+
+    </ion-list>
+
+  </div>
+
+</form>
+  
+

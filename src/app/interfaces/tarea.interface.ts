@@ -9,11 +9,11 @@ export interface Tarea {
     fechasAleatoria: string[];
     repeticion: string;
     realizado: boolean;
-    expirado: boolean;
     repeticiones: number;
     codigo: string;
     fromNow: string;
     usuario: Usuario;
     formulario: Formulario;
     tareaDeHoy: string;
+    color: string;
 }
