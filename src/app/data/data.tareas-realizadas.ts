@@ -2,6 +2,7 @@ export const TAREASREALIZ = [
  {
      id: 1,
      nombre: 'OPS Almacén',
+     name: 'OPS warehouse',
      tipo: 'PUNTUAL',
      fechaFin: '2020-03-12T15:30:56.438Z',
      fechaRealizada: '2020-02-06T15:30:56.438Z',
@@ -15,6 +16,7 @@ export const TAREASREALIZ = [
  {
     id: 2,
     nombre: 'Máquina AB3',
+    name: 'achine AB3',
     tipo: 'PUNTUAL',
     fechaFin: '2020-01-20T15:30:56.438Z',
     fechaRealizada: '2020-04-06T15:30:56.438Z',
@@ -28,6 +30,7 @@ export const TAREASREALIZ = [
 {
     id: 3,
     nombre: 'Revisión Fengui Almacén',
+    name: 'Fengui Warehouse Review',
     tipo: 'PUNTUAL',
     fechaFin: '2020-02-15T15:30:56.438Z',
     fechaRealizada: '2020-04-06T15:30:56.438Z',
@@ -41,6 +44,7 @@ export const TAREASREALIZ = [
 {
     id: 4,
     nombre: 'Máquina AB4',
+    name: 'Machine AB4',
     tipo: 'PUNTUAL',
     fechaFin: '2020-04-06T15:30:56.438Z',
     fechaRealizada: '2020-01-06T15:30:56.438Z',
@@ -54,6 +58,7 @@ export const TAREASREALIZ = [
 {
     id: 5,
     nombre: 'Pasillo 20 Almacén MK50',
+    name: 'Hall 20 Warehouse MK50',
     tipo: 'PUNTUAL',
     fechaFin: '2020-01-01T15:30:56.438Z',
     fechaRealizada: '2020-04-06T15:30:56.438Z',

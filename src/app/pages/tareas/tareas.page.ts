@@ -8,6 +8,7 @@ import { TAREASEXP } from '../../data/data.tareas-expiradas';
 import { TAREASREALIZ } from '../../data/data.tareas-realizadas';
 import { TAREASPEN } from '../../data/data.tareas-pendientes';
 import { UiService } from '../../services/ui.service';
+import { ignoreElements } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tareas',
@@ -25,19 +26,22 @@ export class TareasPage implements OnInit {
   tareaDeHoy = '';
   secciones: any[] = [
     {
-      name: 'Tareas Expiradas',
+      name: 'Expired Tasks',
+      name2: 'Tareas Expiradas',
       expanded: true,
       tareas: [],
       color: 'separador-rojo'
     },
     {
-      name: 'Tareas Pendientes',
+      name: 'Pending Tasks',
+      name2: 'Tareas Pendientes',
       expanded: true,
       tareas: [],
       color: 'separador-verde'
     },
     {
-      name: 'Tareas Aprobadas',
+      name: 'Verified Tasks',
+      name2: 'Tareas Aprobadas',
       expanded: false,
       tareas: [],
       color: 'separador-azul'
@@ -60,9 +64,9 @@ export class TareasPage implements OnInit {
 
     /* this.dividirTareas(); */
     this.secciones.forEach( seccion => {
-      if ( seccion.name === 'Tareas Expiradas' ) {
+      if ( seccion.name === 'Tareas Expiradas' || seccion.name === 'Expired Tasks' ) {
         seccion.tareas = this.tareasExpiradas;
-      } else if ( seccion.name === 'Tareas Pendientes'  ) {
+      } else if ( seccion.name === 'Tareas Pendientes' || seccion.name === 'Pending Tasks' ) {
         seccion.tareas = this.tareasPendientes;
         /* let arr = seccion.tareas;
         arr.forEach( t => {
@@ -70,7 +74,7 @@ export class TareasPage implements OnInit {
             t.color = 'light';
           }
         }); */
-      } else if ( seccion.name === 'Tareas Aprobadas') {
+      } else if ( seccion.name === 'Tareas Aprobadas' || seccion.name === 'Verified Tasks') {
         seccion.tareas = this.tareasRealizadas;
       }
     });
@@ -88,7 +92,7 @@ export class TareasPage implements OnInit {
   irAtarea( tarea, item ) {
     console.log(item);
 
-    if(item.name === 'Tareas Expiradas') {
+    if(item.name === 'Tareas Expiradas' || item.name === 'Expired Tasks') {
       this.uiService.alertaConTiempo('Tarea Expirada', 'Esta Tarea ha expirado y no es posible realizarla');
     } else {
       this.router.navigate([`/checklist`]);
@@ -115,7 +119,7 @@ export class TareasPage implements OnInit {
 
   expandItem(item): void {
 
-    if (item.name === 'Tareas Aprobadas') {
+    if (item.name === 'Tareas Aprobadas' || item.name === 'Verified Tasks' ) {
 
       if (item.expanded) {
         item.expanded = false;
@@ -140,11 +144,17 @@ export class TareasPage implements OnInit {
       let fecha = new Date(tarea.fechaFin);
       tarea.fromNow = moment(fecha).fromNow();
       if ( tarea.estado === 'PENDIENTE APROBACION') {
-        tarea.fromNow = 'Pendiente Aprovación';
+        /* tarea.fromNow = 'Pendiente Aprovación'; */
+        tarea.fromNow = 'Pending Aprobal';
         tarea.colorFromNow = 'success';
       }
-      if (tarea.fromNow.includes('hours')) {
-        tarea.fromNow = 'Hoy';
+      if (tarea.fromNow.includes('hours') || tarea.fromNow.includes('minutes')) {
+        tarea.fromNow = 'Today';
+        tarea.colorFromNow = 'success';
+      }
+
+      if ( tarea.id === 4 ) {
+        tarea.fromNow = 'Until 18 March';
         tarea.colorFromNow = 'success';
       }
 
