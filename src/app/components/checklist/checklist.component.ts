@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
+import { ChecklistService } from '../../services/checklist.service';
 
 @Component({
   selector: 'app-checklist',
@@ -9,10 +10,12 @@ import { Validators, FormBuilder, FormGroup, FormControl, FormArray } from '@ang
 export class ChecklistComponent implements OnInit {
 
   @Input() secciones: string[] = [];
-
+  
+  private secciones2: any[] = [];
   public myForm: FormGroup;
   public formArr = new FormArray([]);
   private checkCount = 1;
+  checklist: any;
 
   avatarSlide = {
     slidesPerView: 2.5
@@ -53,104 +56,80 @@ export class ChecklistComponent implements OnInit {
     },
 ];
 
-  constructor(private formBuilder: FormBuilder) {
-    /* this.addNewSection('Barreras'); */
-    this.myForm = this.formBuilder.group({
-      sections: this.formBuilder.array([])
-    });
-  }
+constructor(private formBuilder: FormBuilder, private checklistService: ChecklistService) {
+  /* this.addNewSection('Barreras'); */
+  this.myForm = this.formBuilder.group({
+    sections: this.formBuilder.array([])
+  });
+
+  this.checklist = checklistService.getCheklist();
+
+  /* this.checklist.secciones.forEach( sec => {
+    this.secciones2.push(sec.nombre)
+  }); */
+
+  this.secciones2 = this.checklist.secciones;
+
+  console.log(this.checklist);
+  console.log(this.secciones2);
+}
 
 ngOnInit() {
-    /* console.log({secciones: this.secciones}); */
-    this.secciones.forEach( seccion => {
-      this.addNewSection(seccion);
+  /* console.log({secciones: this.secciones}); */
+  this.secciones2.forEach( (seccion: any) => {
+  //  console.log(seccion.nombre);
+    this.addNewSection(seccion.nombre);
+  });
+  //  console.log(this.myForm);
+
+  this.secciones2.forEach( (sec, i) => {
+    sec.checkList.forEach( (check, j) => {
+    //  console.log( i, sec.nombre, check.texto, check.fotos );
+      this.addDataChek( i, sec.nombre, check.texto, check.fotos );
     });
+  });
+}
 
-    /* for (let i = 0; i < this.secciones.length; i++) {
-      this.myForm[i] = this.formBuilder.group({
-        chek1: ['', Validators.required]
-      });
-      console.log(this.myForm[i].controls);
-      console.log(this.myForm[i]);
-    } */
+sections(): FormArray {
+  return this.myForm.get('sections') as FormArray;
+}
 
-    /* this.seccion = this.formBuilder.group({
-       chek1: ['', Validators.required]
-       seccion1: this.formBuilder.array([])
-     }); */
+addNewSection(name: string) {
+//  console.log('add new section ' + name);
+  this.sections().push( this.formBuilder.group({[name]: new FormArray([])}));
+}
 
-    /* this.secciones.forEach( seccion => {
-      this.addNewSection(seccion);
-    }); */
+removeSection(secIndex: number) {
+  this.sections().removeAt(secIndex);
+}
 
+sectionCheks(secIndex: number, section: string): FormArray {
+  return this.sections().at(secIndex).get(section) as FormArray;
+}
 
-    console.log(this.myForm);
+sectionCheckFotos(secIndex: number, section: string): FormArray {
+  return this.sections().at(secIndex).get(section) as FormArray;
+}
 
-  }
+addNewChek(secIndex: number, section: string) {
+  console.log('add new chek in ' + section);
+  this.sectionCheks(secIndex, section).controls.unshift( this.formBuilder.group({ texto: this.formBuilder.control(''), fotos: this.formBuilder.control([])}) );
+//  console.log(this.myForm);
+}
 
-  sections(): FormArray {
-    return this.myForm.get('sections') as FormArray;
-  }
+addDataChek(secIndex: number, section: string, texto: string, fotos: string[]) {
+//  console.log('add data chek in ' + section);
+  this.sectionCheks(secIndex, section).controls.unshift( this.formBuilder.group({ texto: this.formBuilder.control(texto), fotos: this.formBuilder.control(fotos)}) );
+//  console.log(this.sectionCheks(secIndex, section).controls[0].value);
+}
 
-  addNewSection(name: string) {
-    console.log('add new section ' + name);
-    this.sections().push( this.formBuilder.group({[name]: new FormArray([])}));
-  }
-
-  removeSection(secIndex: number) {
-    this.sections().removeAt(secIndex);
-  }
-
-  sectionCheks(secIndex: number, section: string): FormArray {
-    return this.sections().at(secIndex).get(section) as FormArray;
-  }
-
-  addNewChek(secIndex: number, section: string) {
-    console.log('add new chek in ' + section);
-    this.sectionCheks(secIndex, section).push( this.formBuilder.group({ chek: this.formBuilder.control('')}) );
-  }
-
-  removeChek(secIndex: number, chekIndex: number, section: string) {
-    this.sectionCheks(secIndex, section).removeAt(chekIndex);
-  }
-
-
-
-
-  addItems() {
-    this.sections().push(this.formBuilder.control(''));
-  }
-
-addControl( seccion ) {
-    console.log(seccion);
-
-    this.checkCount++;
-    this.myForm.addControl(seccion, new FormControl('', Validators.required));
-    console.log(this.myForm.controls);
-  }
-
-addField(): FormGroup {
-    return this.formBuilder.group({
-      check1: ['', Validators.required]
-    });
-  }
-
-removeControl(control) {
-    console.log(control);
-    this.myForm.removeControl(control.key);
-  }
+removeChek(secIndex: number, chekIndex: number, section: string) {
+  this.sectionCheks(secIndex, section).removeAt(chekIndex);
+}
 
 removeImg(img) {
     console.log(img);
-  }
+}
 
-seleccionarAvatar( avatar ) {
 
-    this.avatars.forEach( av => av.seleccionado = false );
-    avatar.seleccionado = true;
-
-    console.log(avatar.img);
-  //  this.avatarSel.emit( avatar.img );
-
-  }
 }

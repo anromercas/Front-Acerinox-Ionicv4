@@ -145,7 +145,8 @@ export class TareasPage implements OnInit {
       tarea.fromNow = moment(fecha).fromNow();
       if ( tarea.estado === 'PENDIENTE APROBACION') {
         /* tarea.fromNow = 'Pendiente Aprovación'; */
-        tarea.fromNow = 'Pending Aproal'
+        // tarea.fromNow = 'Pending Aproval'
+        tarea.fromNow = ''
         tarea.colorFromNow = 'success';
       }
       if (tarea.fromNow.includes('hours') || tarea.fromNow.includes('minutes')) {
@@ -155,6 +156,16 @@ export class TareasPage implements OnInit {
 
       if ( tarea.id === 4 ) {
         tarea.fromNow = 'Until 18 March';
+        tarea.colorFromNow = 'success';
+      }
+
+      if ( tarea.id === 6 ) {
+        tarea.fromNow = '12:30';
+        tarea.colorFromNow = 'success';
+      }
+
+      if (tarea.id === 1) {
+        tarea.fromNow = '9:00';
         tarea.colorFromNow = 'success';
       }
 

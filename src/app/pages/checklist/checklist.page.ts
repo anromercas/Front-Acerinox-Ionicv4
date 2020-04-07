@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChecklistPage implements OnInit {
 
-  secciones = ['Barreras', 'Sensores', 'Orden y Limpieza'];
+  secciones = ['Barreras', 'Sensores', 'Orden y Limpieza', 'Puertas'];
 
   constructor() { }
 

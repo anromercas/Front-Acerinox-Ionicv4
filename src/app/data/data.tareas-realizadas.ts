@@ -16,7 +16,7 @@ export const TAREASREALIZ = [
  {
     id: 2,
     nombre: 'Máquina AB3',
-    name: 'achine AB3',
+    name: 'Machine AB3',
     tipo: 'PUNTUAL',
     fechaFin: '2020-01-20T15:30:56.438Z',
     fechaRealizada: '2020-04-06T15:30:56.438Z',

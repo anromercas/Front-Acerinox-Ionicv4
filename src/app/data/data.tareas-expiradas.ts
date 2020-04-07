@@ -2,7 +2,7 @@ export const TAREASEXP = [
  {
      id: 1,
      nombre: 'OPS Almacén',
-     name: 'OPS warehouse',
+     name: 'PSO warehouse',
      tipo: 'PUNTUAL',
      fechaFin: '2020-03-12T15:30:56.438Z',
      estado: 'EXPIRADA',

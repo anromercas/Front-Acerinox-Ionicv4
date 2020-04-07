@@ -33,7 +33,7 @@
       <app-expandable expandHeight="400px" [expanded]="item.expanded">
 
         <ion-list >
-          <ion-item  *ngFor="let tarea of item.tareas"  (click)="irAtarea(tarea, item)" detail>
+          <ion-item [ngClass]="tarea.pendiente" *ngFor="let tarea of item.tareas"  (click)="irAtarea(tarea, item)" detail>
             
             <ion-thumbnail class="margin-left avatar-no-radius">
               <img src="/assets/tareas/{{tarea.icono}}">
@@ -49,13 +49,18 @@
             </ion-thumbnail> -->
             <ion-label>
               <ion-text >
-                <h4 class="ion-text-wrap"> {{ tarea.name | titlecase }} </h4>
+                <h4 class="ion-text-wrap"> {{ tarea.name }} </h4>
               </ion-text>
              <!--  <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
               <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4> -->
             </ion-label>
             <ion-chip [color]="tarea.colorFromNow" [outline]="tarea.outline" slot="end" *ngIf="tarea.estado !== 'RALIZADA'" >
-              <ion-label> <ion-icon name="time" *ngIf="tarea.fromNow === 'Pendiente Aprovación'" ></ion-icon> {{ tarea.fromNow }} </ion-label>
+              <ion-label *ngIf="tarea.fromNow !== 'Pendiente Aprovación' || tarea.fromNow !== 'Pending Aproval'"> 
+                {{ tarea.fromNow }} 
+              </ion-label>
+              <ion-label *ngIf="tarea.fromNow === ''">
+                <ion-icon color="success" name="checkmark"></ion-icon>
+              </ion-label>
             </ion-chip>
           </ion-item> 
         </ion-list>

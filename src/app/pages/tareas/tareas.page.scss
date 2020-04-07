@@ -48,11 +48,16 @@ ion-card-content {
 }
 
 .avatar-no-radius {
-    height: 1.5rem;
+    height: 1.7rem;
     width: 1.5rem;
 }
 
 .chip-pendiente {
     background: #10dc60 !important;
     color: #0E991A !important;
+}
+
+.pending {
+    pointer-events: none;
+    opacity: 0.4 !important;
 }

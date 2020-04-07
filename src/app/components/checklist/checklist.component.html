@@ -2,10 +2,10 @@
 
   <div formArrayName="sections" >
 
-    <ion-list lines="none" *ngFor="let seccion of secciones; index as secIndex">
+    <ion-list lines="none" *ngFor="let seccion of secciones2; index as secIndex">
       <ion-list-header>
-        <h2> {{ seccion }} </h2>  
-        <ion-button (click)="addNewChek(secIndex, seccion)">
+        <h2> {{ seccion.nombre }} </h2>  
+        <ion-button (click)="addNewChek(secIndex, seccion.nombre)">
           <ion-icon slot="start" name="add"></ion-icon>
         </ion-button>
         <ion-checkbox color="success"></ion-checkbox>
@@ -14,39 +14,52 @@
 
       <div [formGroupName]="secIndex">
 
-        <div [formArrayName]="seccion">
+        <div [formArrayName]="seccion.nombre">
+          <ion-item-sliding *ngFor="let chek of sectionCheks(secIndex, seccion.nombre).controls; index as chekIndex">
 
-          <ion-item *ngFor="let chek of sectionCheks(secIndex, seccion).controls; index as chekIndex">
-            <ion-grid fixed>
-              <ion-row [formGroupName]="chekIndex">
-                <ion-col size="8">
-                  <ion-input required type="text" formControlName="chek" placeHolder="Texto..."></ion-input>
-                </ion-col>
-                <ion-col size="3">
+            <ion-item >
+              <ion-grid fixed>
+                <ion-row [formGroupName]="chekIndex">
+                  <ion-col size="8">
+                    <ion-textarea required type="text" formControlName="texto" placeHolder="Texto..."></ion-textarea>
+                  </ion-col>
 
-                  <ion-slides [options]="avatarSlide">
-                    <ion-slide *ngFor="let avatar of avatars">
-                      <ion-img
-                        class="pick-avatar"
-                        src="/assets/avatars/{{ avatar.img }}"
-                        [ngClass]="{ 'pick-avatar-seleccionado': avatar.seleccionado }"
-                        (click)="seleccionarAvatar(avatar)"
-                      ></ion-img>
-                    <ion-icon class="remove-img" (click)="removeImg(avatar)" name="close-circle"></ion-icon>
-                      
+                  <ion-col size="4" >
+                    <ion-slides [options]="avatarSlide" formArrayName="fotos">
+                      <ion-slide *ngFor="let avatar of chek.value.fotos; index as avIndex" >
+                        <ion-img 
+                          class="pick-avatar"
+                          src="/assets/avatars/{{ avatar }}"
+                        ></ion-img>
+                        <ion-icon class="remove-img" (click)="removeImg(avatar)" name="close-circle"></ion-icon>
+                      </ion-slide>
+                    </ion-slides>
+                  </ion-col>
+                  <!-- <ion-col size="2">
+                    <ion-icon color="primary" name="camera" ></ion-icon>
+                    <ion-icon color="danger" name="trash" (click)="removeChek(secIndex, chekIndex, seccion.nombre)"></ion-icon>
+                    <ion-icon  name="close-circle"></ion-icon>
+                  <ion-button fill="clear">
+                    <ion-icon color="primary" name="camera" slot="icon-only"></ion-icon>
+                  </ion-button>
+                  <ion-button color="danger" fill="clear" (click)="removeChek(secIndex, chekIndex, seccion.nombre)">
+                    <ion-icon color="danger" name="trash" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </ion-col> -->
+                
+                </ion-row>
+              </ion-grid>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option >
+                <ion-icon name="camera" slot="icon-only"></ion-icon>
+              </ion-item-option>
 
-                    </ion-slide>
-                  </ion-slides>
-                </ion-col>
-                <ion-col size="1">
-                <!--   <ion-icon  name="close-circle"></ion-icon> -->
-                <ion-icon color="primary" name="camera"></ion-icon>
-                <ion-icon color="danger" (click)="removeChek(secIndex, chekIndex, seccion)" name="trash"></ion-icon>
-
-              </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
+              <ion-item-option color="danger" (click)="removeChek(secIndex, chekIndex, seccion.nombre)">
+                <ion-icon name="trash" slot="icon-only"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
 
         </div>
 
