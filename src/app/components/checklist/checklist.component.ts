@@ -1,6 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Validators, FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 import { ChecklistService } from '../../services/checklist.service';
+import { debounceTime } from "rxjs/operators";
+import { ChecklistInstance } from '../../interfaces/checklistInstance.interface';
+import { ActivatedRoute } from "@angular/router";
+import { NetworkService } from 'src/app/services/network.service';
+import { OfflineManagerService } from 'src/app/services/offline-manager.service';
 
 @Component({
   selector: 'app-checklist',
@@ -9,13 +14,14 @@ import { ChecklistService } from '../../services/checklist.service';
 })
 export class ChecklistComponent implements OnInit {
 
-  @Input() secciones: string[] = [];
+  @Output() nombreChecklist = new EventEmitter;
   
   private secciones2: any[] = [];
   public myForm: FormGroup;
   public formArr = new FormArray([]);
-  private checkCount = 1;
-  checklist: any;
+  checklist: ChecklistInstance;
+
+  isConnected = false;
 
   avatarSlide = {
     slidesPerView: 2.5
@@ -56,38 +62,67 @@ export class ChecklistComponent implements OnInit {
     },
 ];
 
-constructor(private formBuilder: FormBuilder, private checklistService: ChecklistService) {
-  /* this.addNewSection('Barreras'); */
+constructor(private formBuilder: FormBuilder, 
+  private checklistService: ChecklistService, 
+  private activatedRoute: ActivatedRoute,
+  private networkService: NetworkService,
+  private offlineManager: OfflineManagerService) {
   this.myForm = this.formBuilder.group({
     sections: this.formBuilder.array([])
   });
-
-  this.checklist = checklistService.getCheklist();
-
-  /* this.checklist.secciones.forEach( sec => {
-    this.secciones2.push(sec.nombre)
-  }); */
-
-  this.secciones2 = this.checklist.secciones;
-
-  console.log(this.checklist);
-  console.log(this.secciones2);
 }
 
 ngOnInit() {
+
+  /* this.networkService.getNetworkStatus().subscribe( (connected: boolean) => {
+    this.isConnected = connected;
+    console.log(this.isConnected);
+  }) */
+
+  this.networkService.getNetworkStatus().subscribe( (connected: boolean) => {
+    this.isConnected = connected;
+    if (!this.isConnected) {
+      console.log('Por favor enciende tu conexión a Internet');
+      console.log(this.isConnected);
+    //  this.uiService.mostrar_toast_up('Comprueba tu conexión a internet antes de iniciar sesión');
+    } else {
+      console.log(this.isConnected);
+    //  this.uiService.mostrar_toast_up('conexión a internet correcta');
+    }
+  });
+
+  this.activatedRoute.paramMap.subscribe( paramMap => {
+    const recipeId = paramMap.get('id');
+    this.checklist = this.checklistService.getCheklist(recipeId);
+    this.secciones2 = this.checklist.content;
+    console.log(this.checklist);
+    this.nombreChecklist.emit(this.checklist.checklist_id.name);
+  });
+  
   /* console.log({secciones: this.secciones}); */
   this.secciones2.forEach( (seccion: any) => {
   //  console.log(seccion.nombre);
-    this.addNewSection(seccion.nombre);
+    this.addNewSection(seccion.name);
   });
   //  console.log(this.myForm);
 
   this.secciones2.forEach( (sec, i) => {
-    sec.checkList.forEach( (check, j) => {
-    //  console.log( i, sec.nombre, check.texto, check.fotos );
-      this.addDataChek( i, sec.nombre, check.texto, check.fotos );
+    sec.freeValues.forEach( (check, j) => {
+    //  console.log( i, sec.name, check.text, check.images );
+      this.addDataChek( i, sec.name, check.text, check.images );
     });
   });
+
+  
+}
+
+save() {
+  console.log('Guardando Formulario');
+  // Guardar en Local siempre y que el subscribe compruebe si hay conexion y mande los datos a la API
+}
+
+sign() {
+  // hacer la llamada a la API para la firma
 }
 
 sections(): FormArray {
@@ -111,25 +146,61 @@ sectionCheckFotos(secIndex: number, section: string): FormArray {
   return this.sections().at(secIndex).get(section) as FormArray;
 }
 
-addNewChek(secIndex: number, section: string) {
-  console.log('add new chek in ' + section);
-  this.sectionCheks(secIndex, section).controls.unshift( this.formBuilder.group({ texto: this.formBuilder.control(''), fotos: this.formBuilder.control([])}) );
-//  console.log(this.myForm);
+subscribeItemToAdd( itemToAdd, secIndex, section ) {
+
+  itemToAdd.valueChanges.pipe(
+    debounceTime(500)
+  )
+  .subscribe( value => {
+    console.log(value);
+    const valores: any[] = [];
+    this.sectionCheks(secIndex, section).controls.forEach( control => {
+      valores.push(control.value);
+    })
+    console.log(valores);
+    this.checklist.content[secIndex].freeValues = valores;
+    console.log(this.checklist);
+  });
 }
 
-addDataChek(secIndex: number, section: string, texto: string, fotos: string[]) {
-//  console.log('add data chek in ' + section);
-  this.sectionCheks(secIndex, section).controls.unshift( this.formBuilder.group({ texto: this.formBuilder.control(texto), fotos: this.formBuilder.control(fotos)}) );
-//  console.log(this.sectionCheks(secIndex, section).controls[0].value);
+
+addNewChek(secIndex: number, section: string) {
+  this.addDataChek(secIndex, section, '', [], true);
+}
+
+addDataChek(secIndex: number, section: string, texto: string, fotos: string[], nuevo: boolean = false) {
+
+  const itemToAdd = this.formBuilder.group({ text: this.formBuilder.control(texto), images: this.formBuilder.control(fotos)});
+  this.subscribeItemToAdd(itemToAdd, secIndex, section);
+  if(nuevo){
+    this.checklistService.addChecklsitContent(this.checklist._id, section, { texto, fotos } );
+    this.sectionCheks(secIndex, section).controls.unshift( itemToAdd );
+    console.log(this.sectionCheks(secIndex, section).controls);
+    return;
+  }
+
+  this.sectionCheks(secIndex, section).controls.push( itemToAdd );
+  
+
 }
 
 removeChek(secIndex: number, chekIndex: number, section: string) {
   this.sectionCheks(secIndex, section).removeAt(chekIndex);
+
+  console.log(chekIndex);
+  const borrado = this.checklistService.removeCheklistContent(this.checklist._id, section, chekIndex);
+  console.log(borrado);
 }
 
 removeImg(img) {
     console.log(img);
 }
 
+
+// cambio de turno
+changeShift( value ) {
+  this.checklist.shift = value;
+  console.log(this.checklist);
+}
 
 }

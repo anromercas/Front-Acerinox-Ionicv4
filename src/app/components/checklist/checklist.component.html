@@ -1,11 +1,20 @@
 <form [formGroup]="myForm">
 
+  <ion-item color="light">
+    <ion-label position="floating">Turno</ion-label>
+    <ion-select interface="popover" mode="ios" (ionChange)="changeShift($event.detail.value)" >
+      <ion-select-option value="Turno 1">Turno 1</ion-select-option>
+      <ion-select-option value="Turno 2">Turno 2</ion-select-option>
+      <ion-select-option value="Turno 3">Turno 3</ion-select-option>
+      <ion-select-option value="Turno 4">Turno 4</ion-select-option>
+    </ion-select>
+  </ion-item>
   <div formArrayName="sections" >
 
     <ion-list lines="none" *ngFor="let seccion of secciones2; index as secIndex">
       <ion-list-header>
-        <h2> {{ seccion.nombre }} </h2>  
-        <ion-button (click)="addNewChek(secIndex, seccion.nombre)">
+        <h2> {{ seccion.name }} </h2>  
+        <ion-button (click)="addNewChek(secIndex, seccion.name)">
           <ion-icon slot="start" name="add"></ion-icon>
         </ion-button>
         <ion-checkbox color="success"></ion-checkbox>
@@ -14,19 +23,19 @@
 
       <div [formGroupName]="secIndex">
 
-        <div [formArrayName]="seccion.nombre">
-          <ion-item-sliding *ngFor="let chek of sectionCheks(secIndex, seccion.nombre).controls; index as chekIndex">
+        <div [formArrayName]="seccion.name">
+          <ion-item-sliding *ngFor="let chek of sectionCheks(secIndex, seccion.name).controls; index as chekIndex">
 
             <ion-item >
               <ion-grid fixed>
                 <ion-row [formGroupName]="chekIndex">
                   <ion-col size="8">
-                    <ion-textarea required type="text" formControlName="texto" placeHolder="Texto..."></ion-textarea>
+                    <ion-textarea required type="text" formControlName="text" placeHolder="Texto..."></ion-textarea>
                   </ion-col>
 
                   <ion-col size="4" >
-                    <ion-slides [options]="avatarSlide" formArrayName="fotos">
-                      <ion-slide *ngFor="let avatar of chek.value.fotos; index as avIndex" >
+                    <ion-slides [options]="avatarSlide" formArrayName="images">
+                      <ion-slide *ngFor="let avatar of chek.value.images; index as avIndex" >
                         <ion-img 
                           class="pick-avatar"
                           src="/assets/avatars/{{ avatar }}"
@@ -55,7 +64,7 @@
                 <ion-icon name="camera" slot="icon-only"></ion-icon>
               </ion-item-option>
 
-              <ion-item-option color="danger" (click)="removeChek(secIndex, chekIndex, seccion.nombre)">
+              <ion-item-option color="danger" (click)="removeChek(secIndex, chekIndex, seccion.name)">
                 <ion-icon name="trash" slot="icon-only"></ion-icon>
               </ion-item-option>
             </ion-item-options>
@@ -68,6 +77,14 @@
     </ion-list>
 
   </div>
+
+  <ion-button (click)="save()" expand="block" fill="clear" shape="round">
+    Guardar
+  </ion-button>
+
+  <ion-button (click)="sign()" expand="block" fill="clear" shape="round">
+    Firmar
+  </ion-button>
 
 </form>
   

@@ -9,6 +9,8 @@ import { TAREASREALIZ } from '../../data/data.tareas-realizadas';
 import { TAREASPEN } from '../../data/data.tareas-pendientes';
 import { UiService } from '../../services/ui.service';
 import { ignoreElements } from 'rxjs/operators';
+import { SeccionChecklist } from '../../interfaces/seccionChecklist.interface';
+import { ChecklistInstance } from 'src/app/interfaces/checklistInstance.interface';
 
 @Component({
   selector: 'app-tareas',
@@ -19,29 +21,29 @@ export class TareasPage implements OnInit {
 
   size = 'large';
   tareas: Tarea[] = [];
-  tareas2: any[] = [];
+  tareas2: ChecklistInstance[] = [];
   tareasExpiradas: any[] = [];
   tareasRealizadas: any[] = [];
   tareasPendientes: any[] = [];
   tareaDeHoy = '';
-  secciones: any[] = [
+  secciones: SeccionChecklist[] = [
     {
       name: 'Expired Tasks',
-      name2: 'Tareas Expiradas',
+      nameEs: 'Tareas Expiradas',
       expanded: true,
       tareas: [],
       color: 'separador-rojo'
     },
     {
       name: 'Pending Tasks',
-      name2: 'Tareas Pendientes',
+      nameEs: 'Tareas Pendientes',
       expanded: true,
       tareas: [],
       color: 'separador-verde'
     },
     {
       name: 'Verified Tasks',
-      name2: 'Tareas Aprobadas',
+      nameEs: 'Tareas Aprobadas',
       expanded: false,
       tareas: [],
       color: 'separador-azul'
@@ -49,77 +51,54 @@ export class TareasPage implements OnInit {
   ];
 
   constructor(private router: Router,
-              public usuarioService: UsuarioService,
-              public tareaService: TareaService,
-              public uiService: UiService) { }
+    public usuarioService: UsuarioService,
+    public tareaService: TareaService,
+    public uiService: UiService) { }
 
   ngOnInit() {
 
-    this.tareasExpiradas = TAREASEXP;
-    this.tareasPendientes = TAREASPEN;
-    this.tareasRealizadas = TAREASREALIZ;
+    this.tareas2 = this.tareaService.getCheklistInstances();
+    // console.log(this.tareas2);
 
-    this.añadirFromNow();
-
-
-    /* this.dividirTareas(); */
-    this.secciones.forEach( seccion => {
-      if ( seccion.name === 'Tareas Expiradas' || seccion.name === 'Expired Tasks' ) {
-        seccion.tareas = this.tareasExpiradas;
-      } else if ( seccion.name === 'Tareas Pendientes' || seccion.name === 'Pending Tasks' ) {
-        seccion.tareas = this.tareasPendientes;
-        /* let arr = seccion.tareas;
-        arr.forEach( t => {
-          if ( t.estado === 'ASIGNADA' ) {
-            t.color = 'light';
-          }
-        }); */
-      } else if ( seccion.name === 'Tareas Aprobadas' || seccion.name === 'Verified Tasks') {
-        seccion.tareas = this.tareasRealizadas;
-      }
-    });
-
-
-    console.log(this.secciones);
-
-    /* this.tareaService.obtenerTareasDeUsuario().subscribe( (resp: any) => {
-      console.log(resp);
-      this.tareas = resp.tareas;
-      this.añadirFromNow();
-    }); */
+    this.dividirTareas();
   }
 
-  irAtarea( tarea, item ) {
-    console.log(item);
+  irAtarea(tarea, item) {
+  //  console.log(item);
+  //  console.log(tarea);
 
-    if(item.name === 'Tareas Expiradas' || item.name === 'Expired Tasks') {
+    if (item.name === 'Tareas Expiradas' || item.name === 'Expired Tasks') {
       this.uiService.alertaConTiempo('Tarea Expirada', 'Esta Tarea ha expirado y no es posible realizarla');
-    } else {
-      this.router.navigate([`/checklist`]);
+    } else if (item.name === 'Tareas Pendientes' || item.name === 'Pending Tasks') {
+      this.router.navigate(['/checklist', tarea._id]);
     }
   }
 
-  /* dividirTareas() {
-    this.secciones.forEach( seccion => {
-      this.tareas2.forEach( tarea => {
-        if ( tarea.expirada && seccion.name === 'Tareas Expiradas' ) {
-          console.log(tarea);
-          tarea.color = 'danger';
-          seccion.tareas.push(tarea);
-        } else if ( tarea.pendienteAprobacion && seccion.name === 'Tareas Pendientes'  ) {
-          seccion.tareas.push(tarea);
-          tarea.color = 'light';
-        } else if ( tarea.estado === 'REALIZADA' && seccion.name === 'Tareas Realizadas') {
-          seccion.tareas.push(tarea);
+  dividirTareas() {
+    this.tareas2.forEach(tarea => {
+      let hoy = moment(new Date());
+      let dueDateIsBefore = moment(tarea.dueDate).isBefore(hoy);
+      // ['ASSIGNED', 'REVIEW-PENDING', 'REVIEWED']
+      if (tarea.status === 'ASSIGNED' && dueDateIsBefore) {
+        this.añadirFromNow('EXPIRED', tarea);
+        this.secciones[0].tareas.push(tarea);
+      } else if (tarea.status === 'ASSIGNED' || tarea.status === 'REVIEW-PENDING' && dueDateIsBefore === false) {
+        this.añadirFromNow(tarea.status, tarea);
+        if( tarea.status === 'REVIEW-PENDING') {
+          this.secciones[1].tareas.unshift(tarea);
+        } else {
+          this.secciones[1].tareas.push(tarea);
         }
-      });
-      // seccion.tareas = this.tareas2;
+      } else if (tarea.status === 'REVIEWED') {
+        this.añadirFromNow(tarea.status, tarea);
+        this.secciones[2].tareas.push(tarea);
+      }
     });
-  } */
+  }
 
   expandItem(item): void {
 
-    if (item.name === 'Tareas Aprobadas' || item.name === 'Verified Tasks' ) {
+    if (item.name === 'Tareas Aprobadas' || item.name === 'Verified Tasks') {
 
       if (item.expanded) {
         item.expanded = false;
@@ -127,69 +106,45 @@ export class TareasPage implements OnInit {
         item.expanded = true;
       }
     }
-      /* else {
-      this.secciones.map(listItem => {
-        if (item == listItem) {
-          listItem.expanded = !listItem.expanded;
-        } else {
-          listItem.expanded = false;
-        }
-        return listItem;
-      });
-    } */
+    /* else {
+    this.secciones.map(listItem => {
+      if (item == listItem) {
+        listItem.expanded = !listItem.expanded;
+      } else {
+        listItem.expanded = false;
+      }
+      return listItem;
+    });
+  } */
   }
 
-  añadirFromNow() {
-    this.tareasPendientes.forEach( (tarea, index) => {
-      let fecha = new Date(tarea.fechaFin);
-      tarea.fromNow = moment(fecha).fromNow();
-      if ( tarea.estado === 'PENDIENTE APROBACION') {
-        /* tarea.fromNow = 'Pendiente Aprovación'; */
-        // tarea.fromNow = 'Pending Aproval'
-        tarea.fromNow = ''
-        tarea.colorFromNow = 'success';
-      }
-      if (tarea.fromNow.includes('hours') || tarea.fromNow.includes('minutes')) {
-        tarea.fromNow = 'Today';
-        tarea.colorFromNow = 'success';
-      }
+  añadirFromNow(tipo: string, tarea: any) {
+    // ['ASSIGNED', 'REVIEW-PENDING', 'REVIEWED']
+    switch (tipo) {
+      case 'EXPIRED':
+        let fecha = new Date(tarea.dueDate);
+        tarea.fromNow = moment(fecha).format('LL');
+        tarea.colorFromNow = 'danger';
+        break;
 
-      if ( tarea.id === 4 ) {
-        tarea.fromNow = 'Until 18 March';
+      case 'ASSIGNED':
+        let fechaP = new Date(tarea.dueDate);
+        tarea.fromNow = moment(fechaP).fromNow();
+        tarea.colorFromNow = 'tertiary';
+        break;
+
+      case 'REVIEW-PENDING':
+        tarea.fromNow = 'Pendiente Aprobación';
         tarea.colorFromNow = 'success';
-      }
+        tarea.pendiente = 'pending';
+        break;
 
-      if ( tarea.id === 6 ) {
-        tarea.fromNow = '12:30';
+      case 'REVIEWED':
+        tarea.fromNow = '';
         tarea.colorFromNow = 'success';
-      }
+        break;
+    }
 
-      if (tarea.id === 1) {
-        tarea.fromNow = '9:00';
-        tarea.colorFromNow = 'success';
-      }
-
-      /* if ( tarea.fromNow === 'in a day') {
-        tarea.colorFromNow = 'success';
-      } */
-      /* if ( tarea.expirado === true ) {
-        const exp = this.tareas2.splice(index, 1);
-        console.log(exp);
-        this.tareasExpiradas.push(exp[0]);
-      } */
-    });
-
-    this.tareasExpiradas.forEach( exp => {
-      let fecha = new Date(exp.fechaFin);
-      exp.fromNow = moment(fecha).fromNow();
-      exp.colorFromNow = 'danger';
-    });
-
-    this.tareasRealizadas.forEach( real => {
-      let fecha = new Date(real.fechaRealizada);
-      real.fromNow = moment(fecha).format('LL');
-      real.colorFromNow = 'success';
-    });
   }
 
   cerrar_sesion() {

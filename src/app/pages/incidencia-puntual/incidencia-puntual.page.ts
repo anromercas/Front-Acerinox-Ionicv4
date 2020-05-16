@@ -18,4 +18,8 @@ export class IncidenciaPuntualPage implements OnInit {
 
   }
 
+  changeDepartment( value: string ) {
+    console.log(value);
+  }
+
 }

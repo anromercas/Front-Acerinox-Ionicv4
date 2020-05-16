@@ -1,5 +1,6 @@
 <ion-header translucent="true" mode="ios">
   <ion-toolbar color="light">
+    <ion-back-button defaultHref="/" slot="start"></ion-back-button>
     <ion-title>Incidencia Puntual</ion-title>
 
     <ion-buttons slot="end">
@@ -15,11 +16,36 @@
 <ion-content>
 
   <ion-list>
+
+    <ion-item>
+      <ion-label position="floating">Departamento</ion-label>
+      <ion-select interface="popover" mode="ios" (ionChange)="changeDepartment($event.detail.value)">
+        <ion-select-option value="Acería">Acería</ion-select-option>
+        <ion-select-option value="L. Caliente">L. Caliente</ion-select-option>
+        <ion-select-option value="L. Frío">L. Frío</ion-select-option>
+        <ion-select-option value="Oficinas">Oficinas</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Zona</ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
     
-    <!-- <ion-item>
+    <ion-item>
+      <ion-label position="floating">Categoría</ion-label>
+      <ion-select interface="popover" mode="ios" (ionChange)="changeDepartment($event.detail.value)">
+        <ion-select-option value="Categoria1">Acería</ion-select-option>
+        <ion-select-option value="categoria2">categoria2</ion-select-option>
+        <ion-select-option value="categoria3">categoria3</ion-select-option>
+        <ion-select-option value="categoria4">categoria4</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
       <ion-label position="floating">Nombre Incidencia</ion-label>
       <ion-input type="text"></ion-input>
-    </ion-item> -->
+    </ion-item>
 
     <ion-item>
       <ion-label position="floating">Observaciones</ion-label>
@@ -38,14 +64,14 @@
           Cámara
         </ion-button>
       </ion-col>
-      <ion-col size="6">
+      <!-- <ion-col size="6">
         <ion-button expand="full"
                     shape="round"
                     fill="outline">
           <ion-icon slot="start" name="images"></ion-icon>
           Galería
         </ion-button>
-      </ion-col>
+      </ion-col> -->
       <ion-col size="6" offset="3">
         <ion-button expand="full"
                     shape="round"

@@ -169,7 +169,7 @@ export class UsuarioService {
 
       this.http.get(`${ URL }/usuario-token/`, { headers })
           .subscribe( ( resp: any ) => {
-            console.log(resp);
+          //  console.log(resp);
             if ( resp.ok ) {
               this.usuario = resp.usuario;
               resolve(true);

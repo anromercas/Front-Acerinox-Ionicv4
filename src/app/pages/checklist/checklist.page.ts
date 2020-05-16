@@ -7,11 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChecklistPage implements OnInit {
 
-  secciones = ['Barreras', 'Sensores', 'Orden y Limpieza', 'Puertas'];
+  nombreChecklist: string;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  recibeNombre( nombreChecklist: string ) {
+    this.nombreChecklist = nombreChecklist;
   }
 
 }

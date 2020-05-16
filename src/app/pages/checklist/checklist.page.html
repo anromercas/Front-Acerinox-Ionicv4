@@ -1,23 +1,12 @@
-<ion-header>
+<ion-header mode="ios">
   <ion-toolbar>
-    <ion-title>checklist</ion-title>
+    <ion-back-button defaultHref="/" slot="start"></ion-back-button>
+    <ion-title>{{ nombreChecklist }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-item color="secondary">
-    <ion-label>Turno</ion-label>
-    <ion-select interface="popover">
-      <ion-select-option value="1">Turno 1</ion-select-option>
-      <ion-select-option value="2">Turno 2</ion-select-option>
-      <ion-select-option value="3">Turno 3</ion-select-option>
-      <ion-select-option value="4">Turno 4</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-
-
-  <app-checklist [secciones]="secciones"></app-checklist>
+  <app-checklist (nombreChecklist)="recibeNombre( $event )"></app-checklist>
 
 </ion-content>

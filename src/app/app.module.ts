@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import { Network } from '@ionic-native/network/ngx';
 
 // registro local para la fecha
 import es from '@angular/common/locales/es';
@@ -35,6 +36,7 @@ registerLocaleData(es);
     SplashScreen,
     FileTransfer,
     Camera,
+    Network,
     { provide: LOCALE_ID, useValue: 'es-ES' },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
