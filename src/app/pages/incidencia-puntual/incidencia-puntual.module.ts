@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { IncidenciaPuntualPage } from './incidencia-puntual.page';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
+    PipesModule,
     RouterModule.forChild(routes)
   ],
   declarations: [IncidenciaPuntualPage]

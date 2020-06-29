@@ -3,23 +3,26 @@
     <ion-back-button defaultHref="/" slot="start"></ion-back-button>
     <ion-title>Incidencia Puntual</ion-title>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="crearIncidencia()"
+    <!-- <ion-buttons slot="end">
+      <ion-button (click)="guardarIncidencia()"
                   color="primary">
         Guardar
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
 
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+<form [formGroup]="myForm">
+
+
   <ion-list>
 
     <ion-item>
       <ion-label position="floating">Departamento</ion-label>
-      <ion-select interface="popover" mode="ios" (ionChange)="changeDepartment($event.detail.value)">
+      <ion-select interface="popover" formControlName="department" mode="ios" (ionChange)="changeDepartment($event.detail.value)">
         <ion-select-option value="Acería">Acería</ion-select-option>
         <ion-select-option value="L. Caliente">L. Caliente</ion-select-option>
         <ion-select-option value="L. Frío">L. Frío</ion-select-option>
@@ -29,27 +32,32 @@
 
     <ion-item>
       <ion-label position="floating">Zona</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" formControlName="zone" debounce="500"></ion-input>
     </ion-item>
     
     <ion-item>
       <ion-label position="floating">Categoría</ion-label>
-      <ion-select interface="popover" mode="ios" (ionChange)="changeDepartment($event.detail.value)">
-        <ion-select-option value="Categoria1">Acería</ion-select-option>
-        <ion-select-option value="categoria2">categoria2</ion-select-option>
-        <ion-select-option value="categoria3">categoria3</ion-select-option>
-        <ion-select-option value="categoria4">categoria4</ion-select-option>
+      <ion-select interface="popover" formControlName="category" (ionChange)="changeCategory($event.detail.value)">
+        <ion-select-option value="actos-inseguros">Actos Inseguros</ion-select-option>
+        <ion-select-option value="condiciones-inseguras">Condiciones Inseguras</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-select class="ion-text-wrap" interface="popover" formControlName="insecureCategory" (ionChange)="changeCategoryDescription($event.detail.value)">
+        <ion-select-option  *ngFor="let description of category" [value]="description"> {{ description }}</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Nombre Incidencia</ion-label>
-      <ion-input type="text"></ion-input>
+      <ion-input type="text" formControlName="name" ></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label position="floating">Observaciones</ion-label>
-      <ion-textarea></ion-textarea>
+      <ion-textarea formControlName="description" ></ion-textarea>
     </ion-item>
 
 
@@ -59,35 +67,60 @@
       <ion-col size="6">
         <ion-button expand="full"
                     shape="round"
-                    fill="outline">
+                    fill="outline"
+                    [disabled]="!myForm.valid"
+                    (click)="camara()">
           <ion-icon slot="start" name="camera"></ion-icon>
           Cámara
         </ion-button>
       </ion-col>
-      <!-- <ion-col size="6">
+      <ion-col size="6">
         <ion-button expand="full"
                     shape="round"
-                    fill="outline">
-          <ion-icon slot="start" name="images"></ion-icon>
-          Galería
-        </ion-button>
-      </ion-col> -->
-      <ion-col size="6" offset="3">
-        <ion-button expand="full"
-                    shape="round"
-                    color="success">
-          <ion-icon slot="start" name="add"></ion-icon>
-          Añadir
+                    color="success"
+                    [disabled]="!myForm.valid"
+                    (click)="guardarIncidencia(true)">
+          <ion-icon slot="start" name="save" ></ion-icon>
+          Guardar
         </ion-button>
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col size="3" *ngFor="let image of tempImages">
-        <ion-card>
-          <img src="">
+    <ion-row >
+      <ion-col size="6" *ngFor="let image of incident.images">
+        <ion-card formArrayName="images">
+          <ion-img *ngIf="!image.includes('cache')"
+          [src]="image | imagenDetalle: 'incident'"></ion-img>
+        <ion-img *ngIf="image.includes('cache')"
+          [src]="image | imagenDetalle: 'imgLocal'"></ion-img>
+          <!-- <ion-img  [src]="image | imagenDetalle: 'incident'"> </ion-img> -->
         </ion-card>
       </ion-col>
     </ion-row>
+    
+  </form>
+
+  <!-- <ion-list>
+    <ion-item *ngFor="let value of incident.content[0].freeValues; index as valueIndex">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="7">
+            <ion-label>
+              <h1> {{ value.name }} </h1>
+              <h4> {{ value.description }} </h4>
+            </ion-label>
+          </ion-col>
+          <ion-col size="5">
+            <ion-slides [options]="avatarSlide" >
+              <ion-slide *ngFor="let img of incident.content[0].freeValues[valueIndex].images" >
+                <ion-img class="pick-avatar" *ngIf="!img.includes('cache')" [src]="img | imagenDetalle: 'checklistInstance-content'"></ion-img>
+                <ion-img class="pick-avatar" *ngIf="img.includes('cache')" [src]="img | imagenDetalle: 'imgLocal'"></ion-img>
+              </ion-slide>
+            </ion-slides>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list> -->
 
 </ion-content>

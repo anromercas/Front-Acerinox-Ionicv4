@@ -21,8 +21,8 @@ const routes: Routes = [
         loadChildren: '../tareas/tareas.module#TareasPageModule'
       },
       {
-        path: 'formularios',
-        loadChildren: '../formularios/formularios.module#FormulariosPageModule'
+        path: 'incidencia-puntual',
+        loadChildren: '../incidencia-puntual/incidencia-puntual.module#IncidenciaPuntualPageModule'
       },
       {
         path: 'listado-zonas',

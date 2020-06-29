@@ -1,83 +1,102 @@
 <form [formGroup]="myForm">
 
-  <ion-item color="light">
-    <ion-label position="floating">Turno</ion-label>
-    <ion-select interface="popover" mode="ios" (ionChange)="changeShift($event.detail.value)" >
-      <ion-select-option value="Turno 1">Turno 1</ion-select-option>
-      <ion-select-option value="Turno 2">Turno 2</ion-select-option>
-      <ion-select-option value="Turno 3">Turno 3</ion-select-option>
-      <ion-select-option value="Turno 4">Turno 4</ion-select-option>
+  <ion-item color="secondary">
+    <ion-label  position="floating">Turno</ion-label>
+    <ion-select  interface="popover" formControlName="shift" mode="ios"
+      (ionChange)="changeShift($event.detail.value)">
+      <ion-select-option *ngFor="let s of shift" [value]="s">{{ s }}</ion-select-option>
     </ion-select>
   </ion-item>
-  <div formArrayName="sections" >
+  <div formArrayName="contents">
 
-    <ion-list lines="none" *ngFor="let seccion of secciones2; index as secIndex">
-      <ion-list-header>
-        <h2> {{ seccion.name }} </h2>  
-        <ion-button (click)="addNewChek(secIndex, seccion.name)">
-          <ion-icon slot="start" name="add"></ion-icon>
-        </ion-button>
-        <ion-checkbox color="success"></ion-checkbox>
+    <ion-list *ngFor="let content of contents; index as contIndex">
+      <ion-list-header class="border-bottom grad">
+        <ion-label color="dark">
+          <h1> {{ content.section }} </h1>
+        </ion-label>
       </ion-list-header>
 
+      <div [formGroupName]="contIndex">
 
-      <div [formGroupName]="secIndex">
+        <div [formArrayName]="content.section">
 
-        <div [formArrayName]="seccion.name">
-          <ion-item-sliding *ngFor="let chek of sectionCheks(secIndex, seccion.name).controls; index as chekIndex">
+          <ion-list lines="none" *ngFor="let seccion of content.checkpoints; index as secIndex">
+            <ion-list-header>
+              <ion-label color="primary">
+                <h1> {{ seccion.name }} </h1>
+              </ion-label>
+              <ion-checkbox mode="ios" (ionChange)="checked(contIndex, secIndex, $event.detail.checked)" color="success"></ion-checkbox>
+              <ion-button (click)="addNewChek(contIndex, secIndex, content.section, seccion.name)">
+                <ion-icon slot="start" name="add"></ion-icon>
+              </ion-button>
+            </ion-list-header>
 
-            <ion-item >
-              <ion-grid fixed>
-                <ion-row [formGroupName]="chekIndex">
-                  <ion-col size="8">
-                    <ion-textarea required type="text" formControlName="text" placeHolder="Texto..."></ion-textarea>
-                  </ion-col>
+            <div [formGroupName]="secIndex">
 
-                  <ion-col size="4" >
-                    <ion-slides [options]="avatarSlide" formArrayName="images">
-                      <ion-slide *ngFor="let avatar of chek.value.images; index as avIndex" >
-                        <ion-img 
-                          class="pick-avatar"
-                          src="/assets/avatars/{{ avatar }}"
-                        ></ion-img>
-                        <ion-icon class="remove-img" (click)="removeImg(avatar)" name="close-circle"></ion-icon>
-                      </ion-slide>
-                    </ion-slides>
-                  </ion-col>
-                  <!-- <ion-col size="2">
-                    <ion-icon color="primary" name="camera" ></ion-icon>
-                    <ion-icon color="danger" name="trash" (click)="removeChek(secIndex, chekIndex, seccion.nombre)"></ion-icon>
-                    <ion-icon  name="close-circle"></ion-icon>
-                  <ion-button fill="clear">
-                    <ion-icon color="primary" name="camera" slot="icon-only"></ion-icon>
-                  </ion-button>
-                  <ion-button color="danger" fill="clear" (click)="removeChek(secIndex, chekIndex, seccion.nombre)">
-                    <ion-icon color="danger" name="trash" slot="icon-only"></ion-icon>
-                  </ion-button>
-                </ion-col> -->
-                
-                </ion-row>
-              </ion-grid>
-            </ion-item>
-            <ion-item-options side="end">
-              <ion-item-option >
-                <ion-icon name="camera" slot="icon-only"></ion-icon>
-              </ion-item-option>
+              <ion-item color="light">
+                <ion-label position="floating">Puntuación</ion-label>
+                <ion-select interface="popover" formControlName="score" mode="ios"
+                  (ionChange)="changeScore($event.detail.value, contIndex, secIndex)">
+                  <ion-select-option *ngFor="let p of puntuacion" [value]="p">{{ p }}</ion-select-option>
+                </ion-select>
+              </ion-item>
 
-              <ion-item-option color="danger" (click)="removeChek(secIndex, chekIndex, seccion.name)">
-                <ion-icon name="trash" slot="icon-only"></ion-icon>
-              </ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
+              <div [formArrayName]="seccion.name">
+                <ion-item-sliding
+                  *ngFor="let chek of sectionCheks(contIndex, secIndex, content.section, seccion.name).controls; index as chekIndex">
+
+                  <ion-item>
+                    <ion-grid fixed>
+                      <ion-row [formGroupName]="chekIndex">
+                        <ion-col size="7">
+                          <ion-textarea required type="text" formControlName="text" placeHolder="Texto...">
+                          </ion-textarea>
+                        </ion-col>
+
+                        <ion-col size="5">
+                          <ion-slides [options]="avatarSlide" formArrayName="images">
+                            <ion-slide *ngFor="let avatar of chek.value.images; index as avIndex">
+                              <!-- <ion-img class="pick-avatar" src="/assets/avatars/{{ avatar }}"></ion-img> -->
+                              <ion-img class="pick-avatar" *ngIf="!avatar.includes('cache')"
+                                [src]="avatar | imagenDetalle: 'checklistInstance-content'"></ion-img>
+                              <ion-img class="pick-avatar" *ngIf="avatar.includes('cache')"
+                                [src]="avatar | imagenDetalle: 'imgLocal'"></ion-img>
+                              <ion-icon class="remove-img" (click)="removeImg(chek.value.images, avatar)"
+                                name="close-circle"></ion-icon>
+                            </ion-slide>
+                          </ion-slides>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-item>
+                  <ion-item-options side="end">
+                    <ion-item-option (click)="camara(chek.value.images,content.section, seccion.name, chekIndex)">
+                      <ion-icon name="camera" slot="icon-only"></ion-icon>
+                    </ion-item-option>
+
+                    <ion-item-option color="danger" (click)="removeChek(contIndex, secIndex, chekIndex, content.section, seccion.name)">
+                      <ion-icon name="trash" slot="icon-only"></ion-icon>
+                    </ion-item-option>
+                  </ion-item-options>
+                </ion-item-sliding>
+
+              </div>
+
+            </div>
+
+          </ion-list>
 
         </div>
-
       </div>
-
+      
     </ion-list>
-
   </div>
-
+  
+  <ion-item>
+    <ion-label position="floating">Comentarios</ion-label>
+    <ion-textarea required type="text" formControlName="comments">
+    </ion-textarea>
+  </ion-item>
   <ion-button (click)="save()" expand="block" fill="clear" shape="round">
     Guardar
   </ion-button>
@@ -87,5 +106,3 @@
   </ion-button>
 
 </form>
-  
-

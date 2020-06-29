@@ -9,13 +9,25 @@ const URL = environment.url;
 export class ImagenDetallePipe implements PipeTransform {
 
   transform(img: string,  tipo: string = 'basuras'): any {
-    let url = URL + '/imagen';
+    let url = URL + '/image';
 
     if ( !img ) {
       return url + '/basuras/xxx';
     }
 
     switch (tipo) {
+      case 'checklist-thumbnail':
+        url += '/checklist-thumbnail/' + img;
+      break;
+      
+      case 'checklistInstance-content':
+        url += '/checklistInstance-content/' + img;
+      break;
+
+      case 'incident':
+        url += '/incident/' + img;
+      break;
+
       case 'usuarios':
         url += '/usuarios/' + img;
         break;

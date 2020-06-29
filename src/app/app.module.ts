@@ -13,6 +13,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Network } from '@ionic-native/network/ngx';
+import { OneSignal } from '@ionic-native/onesignal/ngx';
 
 // registro local para la fecha
 import es from '@angular/common/locales/es';
@@ -37,6 +38,7 @@ registerLocaleData(es);
     FileTransfer,
     Camera,
     Network,
+    OneSignal,
     { provide: LOCALE_ID, useValue: 'es-ES' },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

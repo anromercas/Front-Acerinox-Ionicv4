@@ -2,127 +2,65 @@
   <ion-toolbar color="light">
 
     <!-- <ion-title>Lista Tareas</ion-title> -->
-    <ion-title>Tasks</ion-title>
-    
-    <ion-buttons slot="end" >
+    <ion-title>Tareas</ion-title>
+
+    <ion-buttons slot="end">
       <ion-chip color="tertiary" (click)="ir('perfil')">
         <ion-avatar class="avatar">
           <img src="/assets/avatars/{{usuarioService.usuario.avatar}}">
         </ion-avatar>
-        <ion-label> {{ usuarioService.usuario.nombre }} </ion-label>
+        <ion-label> {{ usuarioService.usuario.firstname }} </ion-label>
       </ion-chip>
-        <ion-button (click)="cerrar_sesion()" color="danger"> Exit
-          <ion-icon slot="end" name="exit" color="danger"></ion-icon>
-        </ion-button>
-      </ion-buttons>
+      <ion-button (click)="cerrar_sesion()" color="danger"> Salir
+        <ion-icon slot="end" name="exit" color="danger"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-list  *ngFor="let item of secciones; index as i"   >
-    <ion-list-header (click)="expandItem(item)" [ngClass]="item.color">
-      <div> 
-        <ion-icon name="chevron-forward" *ngIf="!item.expanded" ></ion-icon>
-        <ion-icon name="chevron-down" *ngIf="item.expanded" ></ion-icon>
-        {{ item.nameEs }} 
-      </div>
-    </ion-list-header>
+      <ion-list *ngFor="let item of secciones; index as i">
+        <ion-list-header (click)="expandItem(item)" [ngClass]="item.color">
+          <div>
+            <ion-icon name="chevron-forward" *ngIf="!item.expanded"></ion-icon>
+            <ion-icon name="chevron-down" *ngIf="item.expanded"></ion-icon>
+            {{ item.nameEs }}
+          </div>
+        </ion-list-header>
 
-    <div>
-      <app-expandable expandHeight="400px" [expanded]="item.expanded">
+        <div>
+          <app-expandable expandHeight="400px" [expanded]="item.expanded">
 
-        <ion-list >
-          <ion-item [ngClass]="tarea.pendiente" *ngFor="let tarea of item.tareas"  (click)="irAtarea(tarea, item)" detail>
-            
-            <ion-thumbnail class="margin-left avatar-no-radius">
-              <img src="/assets/tareas/{{tarea.checklist_id.icon}}">
-            </ion-thumbnail>
-            
-            <ion-label>
-              <ion-text >
-                <h4 class="ion-text-wrap"> {{ tarea.checklist_id.name }} </h4>
-              </ion-text>
-             <!--  <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
+            <ion-list>
+              <ion-item [ngClass]="tarea.pendiente" *ngFor="let tarea of item.tareas" (click)="irAtarea(tarea, item)"
+                detail>
+
+                <ion-thumbnail class="margin-left avatar-no-radius">
+                  <img [src]="tarea.checklist_id.thumbnail | imagenDetalle: 'checklist-thumbnail'">
+                </ion-thumbnail>
+
+                <ion-label>
+                  <ion-text>
+                    <h4 class="ion-text-wrap"> {{ tarea.checklist_id.name }} </h4>
+                  </ion-text>
+                  <!--  <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
               <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4> -->
-            </ion-label>
-            <ion-chip [color]="tarea.colorFromNow" [outline]="tarea.outline" slot="end" *ngIf="tarea.estado !== 'RALIZADA'" >
-              <ion-label *ngIf="tarea.fromNow !== ''"> 
-                {{ tarea.fromNow }} 
-              </ion-label>
-              <ion-label *ngIf="tarea.fromNow === ''">
-                <ion-icon color="success" name="checkmark"></ion-icon>
-              </ion-label>
-            </ion-chip>
-          </ion-item> 
-        </ion-list>
-       
-      </app-expandable>
-    </div>
-  </ion-list>
+                </ion-label>
+                <ion-chip [color]="tarea.colorFromNow" [outline]="tarea.outline" slot="end"
+                  *ngIf="tarea.estado !== 'OK'">
+                  <ion-label *ngIf="tarea.fromNow !== ''">
+                    {{ tarea.fromNow }}
+                  </ion-label>
+                  <ion-label *ngIf="tarea.fromNow === ''">
+                    <ion-icon color="success" name="checkmark"></ion-icon>
+                  </ion-label>
+                </ion-chip>
+              </ion-item>
+            </ion-list>
 
-
-  <!-- <ion-list lines="none" >
-
-    <ion-item-divider *ngFor="let item of secciones; let i = index" >
-      <ion-item (click)="toggleSection(i)" [ngClass]=" {'section-active': item.open, 'section': !item.open} ">
-        <ion-icon slot="start" name="chevron-forward" *ngIf="!item.open" ></ion-icon>
-        <ion-icon slot="start" name="chevron-down" *ngIf="item.open" ></ion-icon>
-        {{ item.name }}
-      </ion-item>
-      
-      <ion-list *ngIf="item.tareas && item.open">
-
-          <ion-item *ngFor="let tarea of item.tareas; let j = index" [color]="tarea.tareaDeHoy" detail>
-            <ion-thumbnail slot="start" class="ion-text-center">
-              <ion-label color="tertiary" class="fondo-fecha">
-                <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 
-                <h2> {{ tarea.fechaFin | date: 'M' }} </h2> 
-                <h3> {{ tarea.fechaFin | date: 'y' }} </h3> 
-              </ion-label>
-              
-            </ion-thumbnail>
-            <ion-label>
-              <ion-text color="primary">
-                <h1 class="ion-text-wrap"> {{ tarea.nombre | titlecase }} </h1>
-              </ion-text>
-              <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
-              <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4>
-            </ion-label>
-            <ion-chip color="tertiary" slot="end" >
-              <ion-label> {{ tarea.fromNow }} </ion-label>
-            </ion-chip>
-          </ion-item>
-          
-
-          
-        </ion-list>
-      
-    </ion-item-divider> 
-  </ion-list>-->
-
-
-    
-    <!-- <ion-item *ngFor="let tarea of tareas2" [color]="tarea.tareaDeHoy" detail>
-      <ion-thumbnail slot="start" class="ion-text-center">
-        <ion-label color="tertiary" class="fondo-fecha">
-          <h1> {{ tarea.fechaFin | date: 'd' }} </h1> 
-          <h2> {{ tarea.fechaFin | date: 'M' }} </h2> 
-          <h3> {{ tarea.fechaFin | date: 'y' }} </h3> 
-        </ion-label>
-        
-      </ion-thumbnail>
-      <ion-label>
-        <ion-text color="primary">
-          <h1 class="ion-text-wrap"> {{ tarea.nombre | titlecase }} </h1>
-        </ion-text>
-        <h2 class="ion-text-wrap"> {{ tarea.tipo | titlecase }} </h2>
-        <h4 class="ion-text-wrap"> Repetición: <b> {{ tarea.repeticion }} </b> </h4>
-      </ion-label>
-      <ion-chip color="tertiary" slot="end" >
-        <ion-label> {{ tarea.fromNow }} </ion-label>
-      </ion-chip>
-    </ion-item> 
-  </ion-list>-->
+          </app-expandable>
+        </div>
+      </ion-list>
 
 </ion-content>

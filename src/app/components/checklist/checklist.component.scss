@@ -4,7 +4,8 @@ img {
 
 .pick-avatar {
     width: 50px;
-    opacity: 0.3;
+    height: 50px;
+    /* opacity: 0.3; */
 }
 
 .pick-avatar-seleccionado {
@@ -16,4 +17,12 @@ img {
     position: absolute;
     right: 0px;
     top: 0px;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #0894DA;
+}
+
+.grad {
+    background-image: linear-gradient(#fff, #0894DA) !important;
 }

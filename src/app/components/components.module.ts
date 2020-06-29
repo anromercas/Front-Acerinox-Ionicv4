@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ExpandableComponent } from './expandable/expandable.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChecklistComponent } from './checklist/checklist.component';
+import { PipesModule } from '../pipes/pipes.module';
 
 
 
@@ -17,7 +18,8 @@ import { ChecklistComponent } from './checklist/checklist.component';
   imports: [
     CommonModule,
     IonicModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PipesModule
   ],
   exports: [
     AvatarSelectorComponent,

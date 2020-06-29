@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Network } from '@ionic-native/network/ngx';
 import { environment } from 'src/environments/environment';
 import { OfflineManagerService } from './offline-manager.service';
+import { UsuarioService } from './usuario.service';
 
 const URL = environment.url;
 
@@ -16,7 +17,8 @@ export class NetworkService {
 
   constructor(private network: Network, 
               private http: HttpClient, 
-              private offlineManager: OfflineManagerService) {
+              private offlineManager: OfflineManagerService,
+              private usuarioService: UsuarioService,) {
     this.network.onConnect().subscribe(() => {
       console.log('network was connected :-)');
       this.hasConnection.next(true);
@@ -41,19 +43,27 @@ export class NetworkService {
   }
 
   private getNetworkTestRequest(): Observable<any> {
-    return this.http.get(URL);
+    const headers = new HttpHeaders({
+      'token': this.usuarioService.token
+    });
+
+    console.log(headers);
+    
+    return this.http.get(`${URL}/checklists`, {headers});
+
   }
 
   public async testNetworkConnection() {
+    console.log('holi');
     try {
       this.getNetworkTestRequest().subscribe(
         success => {
-          // console.log('Request to Google Test  success', success);
+          console.log('Request to Google Test  success', success);
           this.hasConnection.next(true);
           return;
         },
         error => {
-          // console.log('Request to Google Test fails', error);
+          console.log('Request to Google Test fails', error);
           this.hasConnection.next(false);
           return;
         }

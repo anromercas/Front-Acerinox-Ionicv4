@@ -16,8 +16,10 @@ interface StoredRequest {
   type: string;
   data: any;
   img?: string;
-  tipoImg?: string;
-  idBasura?: string;
+  contentSection?: string;
+  checkpointName?: string;
+  indexObservation?: number;
+  idchecklistInstance?: string;
   time: number;
   id: string;
 }
@@ -40,7 +42,7 @@ export class OfflineManagerService {
         if (storeObj && storeObj.length > 0) {
           return this.sendRequests(storeObj).pipe(
             finalize(() => {
-              this.uiService.mostrar_toast_up('Conexión restablecida, Calificación subida');
+              this.uiService.mostrar_toast_up('Conexión restablecida, datos sincronizados');
               this.storage.remove(STORAGE_REQ_KEY);
             }),
           );
@@ -53,15 +55,17 @@ export class OfflineManagerService {
   }
 
 
-  storeImg(url, type, data, img, tipoImg, idBasura) {
+  storeImg(url, type, data, img, idchecklistInstance, contentSection, checkpointName, indexObservation) {
     this.uiService.mostrar_toast_up('Imagen guardada en local, no hay conexión a internet');
     const action: StoredRequest = {
       url,
       type,
       data,
       img,
-      tipoImg,
-      idBasura,
+      idchecklistInstance,
+      contentSection, 
+      checkpointName,
+      indexObservation,
       time: new Date().getTime(),
       id: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
     };
@@ -82,12 +86,13 @@ export class OfflineManagerService {
   }
 
   storeRequest(url, type, data) {
-    this.uiService.mostrar_toast_up('Calificación guardada en local, no hay conexión a internet');
+    this.uiService.mostrar_toast_up('Guardado en local, no hay conexión a internet');
 
     const action: StoredRequest = {
       url,
       type,
       data,
+      idchecklistInstance: data._id,
       time: new Date().getTime(),
       id: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
     };
@@ -129,7 +134,7 @@ export class OfflineManagerService {
           }
         };
         const fileTransfer: FileTransferObject = this.fileTransfer.create();
-        const url = `${URL}/upload/${op.tipoImg}/${op.idBasura}`;
+        const url = `${URL}/upload/checklistInstance-content/${op.idchecklistInstance}?contentSection=${op.contentSection}&checkpointName=${op.checkpointName}&indexObservation=${op.indexObservation}`;
 
         fileTransfer.upload(op.img, url, options).then(res => {
           console.log(res);
@@ -143,13 +148,13 @@ export class OfflineManagerService {
 
         const oneObs = this.http.request(op.type, op.url, options).subscribe((data: any) => {
           console.log('offline Manager', data);
-          const url = URL + '/historico';
+          const url = `${URL}/checklistInstances/${op.idchecklistInstance}`;
           const options = {
-            body: data.basura,
+            body: data,
             headers
           };
-          this.http.request('POST', url, options).subscribe(resp => {
-            console.log('Historico guardado en offline Manager ', resp);
+          this.http.request('PUT', url, options).subscribe(resp => {
+            console.log('ChecklistInstance guardado en offline Manager ', resp);
           });
         });
         obs.push(oneObs);

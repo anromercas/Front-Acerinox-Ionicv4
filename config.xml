@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.residuosatlantic.appresiduos00001" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Resíduos Atlantic</name>
-    <description>App para la gestión de contenedores de Atlantic Copper</description>
+<widget id="com.TareasAcerinox.apptareas00001" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Tareas Acerinox</name>
+    <description>App para la gestión de tareas de Acerinox</description>
     <author email="nuria@cornersafety.com" href="http://cornersafety.com/">Nuria Romero Castillo</author>
     <content src="index.html" />
     <access origin="*" />

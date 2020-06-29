@@ -31,6 +31,33 @@ export class UiService {
     }, tiempo);
   }
 
+  async alertConfirmar(titulo: string, subtitulo: string, ) {
+    const alert = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: () => {
+            alert.dismiss(false);
+            return false;
+          }
+        },
+        {
+          text: 'Si',
+          role: 'ok',
+          handler: () => {
+            alert.dismiss(true);
+            return true;
+          }
+        }
+      ]
+    });
+    return alert;
+
+  }
+
   async mostrar_toast(mensaje: string) {
     const toast = await this.toastCtrl.create({
       message: mensaje,

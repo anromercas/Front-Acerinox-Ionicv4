@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { TareaService } from '../../services/tarea.service';
 import { Tarea } from 'src/app/interfaces/tarea.interface';
 import * as moment from 'moment';
-import { TAREASEXP } from '../../data/data.tareas-expiradas';
-import { TAREASREALIZ } from '../../data/data.tareas-realizadas';
-import { TAREASPEN } from '../../data/data.tareas-pendientes';
 import { UiService } from '../../services/ui.service';
-import { ignoreElements } from 'rxjs/operators';
 import { SeccionChecklist } from '../../interfaces/seccionChecklist.interface';
 import { ChecklistInstance } from 'src/app/interfaces/checklistInstance.interface';
+import { ChecklistService } from '../../services/checklist.service';
+import { Observable } from 'rxjs';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tareas',
@@ -21,6 +19,7 @@ export class TareasPage implements OnInit {
 
   size = 'large';
   tareas: Tarea[] = [];
+  // tareas2: Observable<ChecklistInstance[]>;
   tareas2: ChecklistInstance[] = [];
   tareasExpiradas: any[] = [];
   tareasRealizadas: any[] = [];
@@ -52,17 +51,32 @@ export class TareasPage implements OnInit {
 
   constructor(private router: Router,
     public usuarioService: UsuarioService,
-    public tareaService: TareaService,
-    public uiService: UiService) { }
+    public uiService: UiService,
+    public navCtrl: NavController,
+    public chkInstanceService: ChecklistService) { }
 
   ngOnInit() {
-
-    this.tareas2 = this.tareaService.getCheklistInstances();
-    // console.log(this.tareas2);
-
-    this.dividirTareas();
   }
 
+  ionViewWillEnter() {
+    // console.log('will enter');
+    this.getData();
+  }
+
+
+  getData() {
+    this.secciones.forEach( sec => {
+      sec.tareas = [];
+    })
+    this.tareas2 = [];
+    console.log(this.tareas2);
+    this.chkInstanceService.getInstances().subscribe( (data: any) => {
+      console.log(data);
+      this.tareas2 = data.data;
+      //console.log(this.tareas2);
+      this.dividirTareas();
+    });
+  }
   irAtarea(tarea, item) {
   //  console.log(item);
   //  console.log(tarea);
@@ -70,26 +84,27 @@ export class TareasPage implements OnInit {
     if (item.name === 'Tareas Expiradas' || item.name === 'Expired Tasks') {
       this.uiService.alertaConTiempo('Tarea Expirada', 'Esta Tarea ha expirado y no es posible realizarla');
     } else if (item.name === 'Tareas Pendientes' || item.name === 'Pending Tasks') {
-      this.router.navigate(['/checklist', tarea._id]);
+      this.navCtrl.navigateRoot(['/checklist', tarea._id]);
     }
   }
 
   dividirTareas() {
     this.tareas2.forEach(tarea => {
+      console.log(tarea);
       let hoy = moment(new Date());
       let dueDateIsBefore = moment(tarea.dueDate).isBefore(hoy);
       // ['ASSIGNED', 'REVIEW-PENDING', 'REVIEWED']
-      if (tarea.status === 'ASSIGNED' && dueDateIsBefore) {
-        this.añadirFromNow('EXPIRED', tarea);
+      if (tarea.status === 'ASIGNADA' && dueDateIsBefore) {
+        this.añadirFromNow('EXPIRADA', tarea);
         this.secciones[0].tareas.push(tarea);
-      } else if (tarea.status === 'ASSIGNED' || tarea.status === 'REVIEW-PENDING' && dueDateIsBefore === false) {
+      } else if (tarea.status === 'ASIGNADA' || tarea.status === 'A_REVISAR' && dueDateIsBefore === false) {
         this.añadirFromNow(tarea.status, tarea);
-        if( tarea.status === 'REVIEW-PENDING') {
+        if( tarea.status === 'A_REVISAR') {
           this.secciones[1].tareas.unshift(tarea);
         } else {
           this.secciones[1].tareas.push(tarea);
         }
-      } else if (tarea.status === 'REVIEWED') {
+      } else if (tarea.status === 'OK') {
         this.añadirFromNow(tarea.status, tarea);
         this.secciones[2].tareas.push(tarea);
       }
@@ -121,25 +136,25 @@ export class TareasPage implements OnInit {
   añadirFromNow(tipo: string, tarea: any) {
     // ['ASSIGNED', 'REVIEW-PENDING', 'REVIEWED']
     switch (tipo) {
-      case 'EXPIRED':
+      case 'EXPIRADA':
         let fecha = new Date(tarea.dueDate);
         tarea.fromNow = moment(fecha).format('LL');
         tarea.colorFromNow = 'danger';
         break;
 
-      case 'ASSIGNED':
+      case 'ASIGNADA':
         let fechaP = new Date(tarea.dueDate);
         tarea.fromNow = moment(fechaP).fromNow();
         tarea.colorFromNow = 'tertiary';
         break;
 
-      case 'REVIEW-PENDING':
+      case 'A_REVISAR':
         tarea.fromNow = 'Pendiente Aprobación';
         tarea.colorFromNow = 'success';
         tarea.pendiente = 'pending';
         break;
 
-      case 'REVIEWED':
+      case 'OK':
         tarea.fromNow = '';
         tarea.colorFromNow = 'success';
         break;

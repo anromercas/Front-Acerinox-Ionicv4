@@ -34,7 +34,7 @@
             <ion-list>
               
               <ion-item>
-                <ion-label>Email</ion-label>
+                <ion-label position="floating">Email</ion-label>
                 <ion-input name="email"
                            type="email"
                            [(ngModel)]="usuario.email"
@@ -42,10 +42,26 @@
               </ion-item>
 
               <ion-item>
-                <ion-label>Nombre</ion-label>
+                <ion-label position="floating">Nombre: </ion-label>
                 <ion-input name="nombre"
                            type="text"
-                           [(ngModel)]="usuario.nombre"
+                           [(ngModel)]="usuario.firstname"
+                           required></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Apellido: </ion-label>
+                <ion-input name="apellido"
+                           type="text"
+                           [(ngModel)]="usuario.secondname"
+                           required></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Apellido 2: </ion-label>
+                <ion-input name="apellido2"
+                           type="text"
+                           [(ngModel)]="usuario.lastname"
                            required></ion-input>
               </ion-item>
 

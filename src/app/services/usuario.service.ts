@@ -27,8 +27,9 @@ export class UsuarioService {
     this.cargarStorage();
   }
 
+
   login(email: string, password: string) {
-    const url = URL + '/loginApp';
+    const url = URL + '/login';
     const usr = {
       email,
       password
@@ -37,11 +38,11 @@ export class UsuarioService {
     return new Promise(resolve => {
       this.http.post(url, usr).subscribe(
         (resp: any) => {
-          if (resp['ok']) {
-            console.log(resp.usuario);
-            this.usuario = resp.usuario;
-            this.role = resp.usuario.role;
-            this.token = resp.token;
+          if (resp['success']) {
+            console.log(resp.data.user);
+            this.usuario = resp.data.user;
+            this.role = resp.data.user.role;
+            this.token = resp.data.token;
             this.guardarStorage();
             resolve(true);
           }
@@ -91,11 +92,11 @@ export class UsuarioService {
     console.log(usuario);
     return new Promise( resolve => {
 
-      this.http.put(`${ URL }/usuario/${id}`, usuario, { headers })
-                .subscribe( resp => {
-                  if( resp['ok'] ) {
-                    this.guardarToken( resp['token'] );
-                    this.usuario = resp['usuario'];
+      this.http.put(`${ URL }/users/${id}`, usuario, { headers })
+                .subscribe( (resp: any) => {
+                  if( resp['success'] ) {
+                    this.guardarToken( resp.data.token );
+                    this.usuario = resp.data.user;
                     this.storage.set('usuario', this.usuario);
                     resolve(true);
                   } else {
@@ -106,11 +107,11 @@ export class UsuarioService {
   }
 
   renuevaToken() {
-    const url = URL + '/login/renuevatoken';
+    const url = URL + '/login/renewToken';
 
     return this.http.get(url).pipe(
       map((resp: any) => {
-        this.token = resp.token;
+        this.token = resp.data.token;
         this.guardarStorage();
         return true;
       })
@@ -167,11 +168,11 @@ export class UsuarioService {
         token: this.token
       });
 
-      this.http.get(`${ URL }/usuario-token/`, { headers })
+      this.http.get(`${ URL }/users/user/userByToken`, { headers })
           .subscribe( ( resp: any ) => {
           //  console.log(resp);
-            if ( resp.ok ) {
-              this.usuario = resp.usuario;
+            if ( resp.success ) {
+              this.usuario = resp.user;
               resolve(true);
             } else {
               this.navCtrl.navigateRoot('/login');

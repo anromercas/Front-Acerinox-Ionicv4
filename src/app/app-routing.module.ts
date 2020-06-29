@@ -25,24 +25,9 @@ const routes: Routes = [
   { path: 'zona', loadChildren: './pages/zona/zona.module#ZonaPageModule', canLoad: [ UsuarioGuard ] },
   { path: 'listado-zonas', loadChildren: './pages/listado-zonas/listado-zonas.module#ListadoZonasPageModule', canLoad: [ UsuarioGuard ] },
   { path: 'perfil', loadChildren: './pages/perfil/perfil.module#PerfilPageModule', canLoad: [ UsuarioGuard ] },
-  { path: 'formularios', loadChildren: './pages/formularios/formularios.module#FormulariosPageModule' },
   { path: 'incidencia-puntual', loadChildren: './pages/incidencia-puntual/incidencia-puntual.module#IncidenciaPuntualPageModule' },
   { path: 'checklist/:id', loadChildren: './pages/checklist/checklist.module#ChecklistPageModule' },
   { path: 'tareas', loadChildren: './pages/tareas/tareas.module#TareasPageModule', canLoad: [ UsuarioGuard ] },
-  /* { path: 'tareas', children: [
-    {
-      path: "",
-      loadChildren: './pages/tareas/tareas.module#TareasPageModule'
-    },
-    {
-      path: ":id",
-      loadChildren: './pages/checklist/checklist.module#ChecklistPageModule'
-    }
-  ], canLoad: [ UsuarioGuard ] }, */
-
-
-
-
 ];
 
 @NgModule({
