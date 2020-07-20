@@ -19,7 +19,7 @@ export class LoginPage implements OnInit {
 
 
   loginUser = {
-    email: 'nuria@mail.com',
+    email: 'axel@mail.com',
     password: '1234'
   };
 

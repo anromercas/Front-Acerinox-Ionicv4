@@ -30,7 +30,7 @@ export class ChecklistService {
   }
 
   getInstances() {
-    const url = URL + '/checklistInstances/instance/byuser/go';
+    const url = URL + '/checklistInstances/instance/byuser';
     const headers = new HttpHeaders({
       'token': this.usuarioService.token
     });
