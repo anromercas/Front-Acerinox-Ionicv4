@@ -42,9 +42,10 @@
               </ion-item>
 
               <div [formArrayName]="seccion.name">
-                <ion-item-sliding
-                  *ngFor="let chek of sectionCheks(contIndex, secIndex, content.section, seccion.name).controls; index as chekIndex">
-
+                <!-- <ion-item-sliding
+                  *ngFor="let chek of sectionCheks(contIndex, secIndex, content.section, seccion.name).controls; index as chekIndex"> -->
+                  <ion-item-sliding
+                  *ngFor="let chek of seccion.observations; index as chekIndex">
                   <ion-item>
                     <ion-grid fixed>
                       <ion-row [formGroupName]="chekIndex">

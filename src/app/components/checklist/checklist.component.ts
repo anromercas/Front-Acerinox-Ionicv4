@@ -23,7 +23,7 @@ export class ChecklistComponent implements OnInit {
   @Output() nombreChecklist = new EventEmitter;
   
   private comments: Subscription;
-  private contents: any[] = [];
+  contents: any[] = [];
   public myForm: FormGroup;
   public formArr = new FormArray([]);
   checklist: ChecklistInstance;
@@ -84,7 +84,7 @@ constructor(private formBuilder: FormBuilder,
     shift: this.formBuilder.control(''),
     comments: this.formBuilder.control(''),
     contents: this.formBuilder.array([])
-    //sections: this.formBuilder.array([])
+    // sections: this.formBuilder.array([])
   });
 }
 
@@ -119,13 +119,16 @@ ngOnInit() {
 
       this.contents.forEach( (content: any, i) => {
         this.addNewContent(content.section);
-      });
-
-      this.contents.forEach( (content: any, i) => {
         content.checkpoints.forEach( (seccion: any, index) => {
           this.addNewSection(i, content.section, seccion.name, this.checklist.content[i].checkpoints[index].score);
         });
       });
+
+      /* this.contents.forEach( (content: any, i) => {
+        content.checkpoints.forEach( (seccion: any, index) => {
+          this.addNewSection(i, content.section, seccion.name, this.checklist.content[i].checkpoints[index].score);
+        });
+      }); */
 
       this.contents.forEach( (content: any, i) => {
         content.checkpoints.forEach( (seccion: any, index) => {
@@ -139,11 +142,11 @@ ngOnInit() {
 
     });
   });
-   //console.log(this.myForm.controls);
+   // console.log(this.myForm.controls);
 
 }
 
-ionViewDidLeave () {
+ionViewDidLeave() {
   this.comments.unsubscribe();
 }
 
@@ -152,18 +155,18 @@ content(): FormArray {
 }
 
 sections(contIndex: number, section: string): FormArray {
-  //return this.myForm.get('sections') as FormArray;
+  // return this.myForm.get('sections') as FormArray;
   return this.content().at(contIndex).get(section) as FormArray;
 }
 
 addNewContent(section: string) {
-  //console.log('Add new Content ' + section);
+  // console.log('Add new Content ' + section);
   this.content().push( this.formBuilder.group({[section]: new FormArray([])}));
 }
 
 addNewSection(contIndex: number, section: string, nameCheck: string, score: number) {
-  //console.log('add new section - checkpoint ' + contIndex + section + nameCheck + score);
-  this.sections(contIndex, section).push(  this.formBuilder.group({[nameCheck]: new FormArray([]), score: this.formBuilder.control(score)} ));
+   console.log('add new section - checkpoint ' + contIndex + section + nameCheck + score);
+  this.sections(contIndex, section).push( this.formBuilder.group({[nameCheck]: new FormArray([]), score: this.formBuilder.control(score)} ));
 }
 
 removeSection(contIndex: number, section: string, secIndex: number) {
@@ -172,6 +175,7 @@ removeSection(contIndex: number, section: string, secIndex: number) {
 
 sectionCheks(contIndex: number, secIndex: number, section: string, nameCheck: string): FormArray {
   // console.log(`${contIndex} - ${section} - ${nameCheck}`);
+  // console.log(this.sections(contIndex, section).at(secIndex).get(nameCheck));
   return this.sections(contIndex, section).at(secIndex).get(nameCheck) as FormArray;
 }
 
